@@ -1731,35 +1731,6 @@ async function initiateDeposit() {
   }
 }
 
-  /* 
-   * REAL PAYHERO INTEGRATION:
-   * POST https://backend.payhero.co.ke/api/v2/payments
-   * Headers: Authorization: Basic base64(username:password)
-   * Body: { amount, phone_number: san, channel_id: YOUR_CHANNEL_ID,
-   *         provider: "m-pesa", external_reference: "KANDEGE-"+userId,
-   *         customer_name: user?.name, callback_url: "https://yourdomain.com/api/callback" }
-   *
-   * In production, call this through your own backend to keep credentials safe.
-   * Example:
-   * const res = await fetch('/api/deposit', { method:'POST',
-   *   headers:{'Content-Type':'application/json'},
-   *   body: JSON.stringify({phone:san, amount, userId: user?.name}) });
-   * const data = await res.json();
-   * if(data.success){ ... wait for callback ... }
-   */
-
-  // DEMO simulation
-  toast(`📱 STK Push sent to ${san}. Enter your M-Pesa PIN.`,'info');
-  setTimeout(()=>{
-    btn.disabled=false; btn.textContent='📱 SEND M-PESA PROMPT';
-    if(!user){ toast('Sign in to complete deposit','alert'); return; }
-    balance+=amount; pnl+=0;
-    addTx('M-Pesa Deposit via PayHero', amount,'💳','#2979ff');
-    updateUI();
-    toast(`✅ ${fmt(amount)} credited to your account!`,'win');
-  },4200);
-}
-
 /* ═══════════════════════════════════
    TOAST
 ═══════════════════════════════════ */
