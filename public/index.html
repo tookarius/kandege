@@ -1105,42 +1105,75 @@ function renderTx(){
 }
 
 /* ═══════════════════════════════════
-   AUTH
+   AUTH - Updated for Demo vs Real Balance
 ═══════════════════════════════════ */
 let ageOk = false, authMode = 'login';
+
 function setAuthMode(mode, el){
   authMode = mode;
   document.querySelectorAll('#auth-seg .auth-seg-btn').forEach(b => b.classList.remove('on'));
   if(el) el.classList.add('on');
   document.getElementById('auth-confirm-field').style.display = mode==='register' ? 'block' : 'none';
 }
+
 function toggleAge(){
   ageOk = !ageOk;
   document.getElementById('age-toggle').classList.toggle('on', ageOk);
 }
+
 function submitAuth(){
   const ident = document.getElementById('auth-ident').value.trim();
   const pw = document.getElementById('auth-pw').value;
-  if(!ident||!pw){ toast('Please fill all fields','alert'); return; }
-  if(authMode==='register' && !ageOk){ toast('Please confirm you are 18+','alert'); return; }
-  user = { name: ident.split('@')[0]||ident.slice(0,8), ident };
-  balance = authMode==='register' ? 0 : 5000;
+
+  if(!ident || !pw){
+    toast('Please fill all fields','alert'); 
+    return;
+  }
+  if(authMode==='register' && !ageOk){
+    toast('Please confirm you are 18+','alert'); 
+    return;
+  }
+
+  user = { 
+    name: ident.split('@')[0] || ident.slice(0,8), 
+    ident 
+  };
+
+  // IMPORTANT CHANGE HERE:
+  balance = 0;                    // Real logged-in users start with 0
+  // balance = authMode==='register' ? 0 : 5000;   ← Old line (remove)
+
   closeModal('auth-modal');
   onLogin();
 }
+
 function onLogin(){
   document.getElementById('balWrap').style.display = 'flex';
+  
   document.getElementById('authBtns').innerHTML = `
     <div class="user-pill" onclick="openModal('auth-modal')">
       <div class="user-av">${user.name.charAt(0).toUpperCase()}</div>
-      <div><div class="user-nm">${user.name.toUpperCase()}</div><div class="user-bal-sm" id="balNum2">${fmt(balance)}</div></div>
+      <div>
+        <div class="user-nm">${user.name.toUpperCase()}</div>
+        <div class="user-bal-sm" id="balNum2">${fmt(balance)}</div>
+      </div>
     </div>`;
+
+  // Hide login gates
   ['gate1','gate2','gate-bin'].forEach(id => {
     const el = document.getElementById(id);
     if(el) el.style.display = 'none';
   });
+
   updateUI();
-  toast(`Welcome back! Balance: ${fmt(balance)} 🎉`, 'win');
+
+  if(balance > 0){
+    toast(`Welcome back! Balance: ${fmt(balance)} 🎉`, 'win');
+  } else {
+    toast(`Welcome to KANDEGE! Please make your first deposit to start playing.`, 'info');
+    // Optional: auto open deposit view
+    // showView('dep');
+  }
 }
 function checkLogin(){
   if(!user){
