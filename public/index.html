@@ -1696,16 +1696,40 @@ function sanitizePhone(p){
   return /^254[17]\d{8}$/.test(s)?s:null;
 }
 
-async function initiateDeposit(){
-  const phone=document.getElementById('dep-phone').value.trim();
-  const amount=parseFloat(document.getElementById('dep-amount').value)||0;
-  if(!phone){ toast('Enter your phone number','alert'); return; }
-  if(amount<10){ toast('Minimum deposit: KES 10','alert'); return; }
-  const san=sanitizePhone(phone);
-  if(!san){ toast('Invalid Kenyan phone number','alert'); return; }
+async function initiateDeposit() {
+  const phone = document.getElementById('dep-phone').value.trim();
+  const amount = parseFloat(document.getElementById('dep-amount').value) || 0;
 
-  const btn=document.getElementById('dep-btn');
-  btn.disabled=true; btn.textContent='⏳ SENDING PROMPT...';
+  if (!phone || amount < 10) {
+    toast('Please enter valid phone and amount ≥ KES 10', 'alert');
+    return;
+  }
+
+  const btn = document.getElementById('dep-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ SENDING M-PESA PROMPT...';
+
+  try {
+    const res = await fetch('/api/deposit/initiate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone, amount })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      toast(`📱 STK Push sent to ${phone}. Open your phone and enter M-Pesa PIN.`, 'info');
+    } else {
+      toast(data.error || 'Failed to send prompt', 'alert');
+    }
+  } catch (err) {
+    toast('Network error. Please try again.', 'alert');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '📱 SEND M-PESA PROMPT';
+  }
+}
 
   /* 
    * REAL PAYHERO INTEGRATION:
