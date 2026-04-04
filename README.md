@@ -88,18 +88,3 @@ This project is for educational and demonstration purposes.
 Real-money gambling requires proper licensing from the Betting Control and Licensing Board (BCLB) in Kenya.
 
 Made with ❤️ for learning & demonstration
-text---
-
-### Next Recommended Steps
-
-After adding these two files:
-
-1. Update your `public/index.html` to fetch real balance on login (using `/api/balance`).
-2. Add a simple authentication system (optional but recommended).
-3. Connect a real database for persistent balances.
-
-Would you like me to give you the **updated `index.html` sections** (especially how to fetch balance after login and on deposit success) so everything connects properly?
-
-Just say **"Yes, give me the frontend updates"** and I’ll provide the exact code changes for `index.html`. 
-
-You now have everything needed to deploy on Vercel!
