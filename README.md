@@ -47,6 +47,7 @@ Create a local `.env` file for development:
 ```env
 PAYHERO_CHANNEL_ID=your_channel_id
 PAYHERO_API_KEY=your_key_if_needed
+```
 Local Development
 Bash# 1. Clone the repo
 git clone <your-repo-url>
