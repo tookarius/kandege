@@ -110,6 +110,14 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
 .tnav.on .tnav-dot{display:block}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
 .top-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-shrink:0}
+/* ★ DEMO BADGE — visible only when not logged in */
+.demo-badge{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:5px;
+  background:rgba(255,204,0,0.1);border:1px solid rgba(255,204,0,0.25);
+  font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:1.2px;color:var(--accent);animation:demoPulse 2.5s ease-in-out infinite}
+.demo-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);
+  animation:pulse 1.5s infinite}
+@keyframes demoPulse{0%,100%{opacity:1}50%{opacity:.6}}
 .bal-wrap{display:flex;align-items:center;gap:8px;padding:5px 12px;
   background:var(--glass);border:1px solid var(--border);border-radius:8px;cursor:pointer}
 .bal-kes{font-size:9px;font-weight:700;letter-spacing:1px;color:var(--txt-2)}
@@ -134,6 +142,11 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
   display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#000}
 .user-nm{font-size:12px;font-weight:700;color:var(--txt-1)}
 .user-bal-sm{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--accent)}
+/* ★ Logout button */
+.logout-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);
+  background:var(--glass);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:var(--txt-3);transition:all .18s;flex-shrink:0}
+.logout-btn:hover{border-color:var(--red);color:var(--red);background:var(--red-dim)}
 
 /* ═══════════════════════════════════════════════════
    MAIN LAYOUT
@@ -154,6 +167,28 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
 #viewport{flex:1;overflow:hidden;position:relative}
 .view{position:absolute;inset:0;display:none;overflow:hidden}
 .view.on{display:flex}
+
+/* ═══════════════════════════════════════════════════
+   ★ DEMO BANNER — floats over game views
+═══════════════════════════════════════════════════ */
+.demo-banner{
+  position:absolute;top:0;left:0;right:0;z-index:20;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:7px 14px;
+  background:linear-gradient(90deg,rgba(255,204,0,0.06),rgba(255,204,0,0.12),rgba(255,204,0,0.06));
+  border-bottom:1px solid rgba(255,204,0,0.15);
+  font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.8px;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.demo-banner-tag{padding:2px 8px;border-radius:3px;background:rgba(255,204,0,0.18);
+  border:1px solid rgba(255,204,0,0.3);font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:800;letter-spacing:1.5px}
+.demo-banner-text{color:var(--txt-2);font-weight:600}
+.demo-banner-btn{padding:4px 14px;border-radius:5px;border:1px solid var(--border-hi);
+  background:var(--accent);color:#000;font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:800;letter-spacing:1px;cursor:pointer;transition:all .18s;
+  text-transform:uppercase}
+.demo-banner-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
 
 /* ═══════════════════════════════════════════════════
    AVIATOR VIEW — 3 COLUMN
@@ -190,7 +225,6 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
 .hpill.md{background:rgba(255,204,0,0.12);color:var(--accent);border:1px solid rgba(255,204,0,0.2)}
 .hpill.hi{background:rgba(0,230,118,0.12);color:var(--green);border:1px solid rgba(0,230,118,0.2)}
 .hpill.xl{background:rgba(41,121,255,0.12);color:var(--blue);border:1px solid rgba(41,121,255,0.2)}
-/* SVG stage */
 .flight-stage{flex:1;position:relative;overflow:hidden;min-height:200px}
 #av-svg{position:absolute;inset:0;width:100%;height:100%}
 .mult-display{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);text-align:center;pointer-events:none;user-select:none}
@@ -199,9 +233,7 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
 .mult-big.state-crash{color:var(--red);text-shadow:0 0 40px rgba(255,23,68,.6)}
 .mult-big.state-wait{color:var(--txt-3);font-size:clamp(20px,3.5vw,36px)}
 .mult-sub{font-size:12px;letter-spacing:2px;color:var(--txt-3);font-weight:700;margin-top:6px;font-family:'Barlow Condensed',sans-serif}
-/* Plane */
 #av-plane{position:absolute;pointer-events:none}
-/* Bottom ticker */
 .arena-footer{height:36px;border-top:1px solid var(--border);display:flex;align-items:center;
   padding:0 14px;gap:8px;flex-shrink:0;overflow:hidden}
 .ticker-item{display:flex;align-items:center;gap:5px;white-space:nowrap;font-size:11px;color:var(--txt-2);flex-shrink:0}
@@ -234,12 +266,10 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
   padding:5px 8px;font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--txt-1);
   outline:none;text-align:center;transition:border-color .18s}
 .ac-inp:focus{border-color:var(--border-hi)}
-/* Potential win box */
 .pot-box{background:rgba(0,230,118,0.06);border:1px solid rgba(0,230,118,0.15);
   border-radius:7px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;margin:8px 0}
 .pot-lbl{font-size:9px;font-weight:700;letter-spacing:1px;color:var(--txt-3);text-transform:uppercase}
 .pot-val{font-family:'Share Tech Mono',monospace;font-size:16px;color:var(--green)}
-/* Big action buttons */
 .action-btn{width:100%;padding:12px;border-radius:8px;border:none;cursor:pointer;
   font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:1.5px;
   transition:all .2s;text-transform:uppercase;margin-top:4px}
@@ -329,7 +359,6 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
 .tf-tab.on{border-color:var(--border-hi);color:var(--accent);background:var(--accent-dim)}
 .chart-stage{flex:1;position:relative;min-height:200px}
 #candle-canvas{position:absolute;inset:0;width:100%;height:100%}
-/* Binary right col */
 .timer-card{background:var(--glass);border:1px solid var(--border);border-radius:10px;
   padding:14px;display:flex;flex-direction:column;align-items:center;gap:8px}
 .timer-svg-wrap{position:relative;width:90px;height:90px}
@@ -456,7 +485,6 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
   font-size:16px;font-weight:800;letter-spacing:1.5px;transition:all .2s;text-transform:uppercase;
   margin-top:4px;box-shadow:0 4px 20px rgba(255,204,0,.25)}
 .submit-btn:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(255,204,0,.4)}
-/* Login gate */
 .gate-overlay{position:absolute;inset:0;z-index:10;border-radius:10px;
   background:rgba(7,14,28,.9);backdrop-filter:blur(6px);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
@@ -524,6 +552,8 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
   .bin-col-r{width:100%;border-left:none;border-top:1px solid var(--border)}
   .chart-stage{min-height:200px}
   .dep-card{padding:18px}
+  .demo-banner{flex-wrap:wrap;gap:6px;padding:6px 10px}
+  .demo-banner-text{display:none}
 }
 @media(max-width:420px){
   #topbar{padding:0 10px;gap:6px}
@@ -546,10 +576,16 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
   <nav class="top-nav">
     <div class="tnav on" onclick="showView('av',this)"><div class="tnav-dot"></div>AVIATOR</div>
     <div class="tnav" onclick="showView('bin',this)">BINARY OPTIONS</div>
-    <div class="tnav" onclick="showView('dash',this)">DASHBOARD</div>
-    <div class="tnav" onclick="showView('dep',this)">DEPOSIT</div>
+    <!-- ★ These nav items require login — hidden for guests -->
+    <div class="tnav" data-auth onclick="showView('dash',this)">DASHBOARD</div>
+    <div class="tnav" data-auth onclick="showView('dep',this)">DEPOSIT</div>
   </nav>
   <div class="top-right">
+    <!-- ★ DEMO BADGE — shown only when NOT logged in -->
+    <div class="demo-badge" id="demoBadge">
+      <div class="demo-badge-dot"></div>
+      DEMO
+    </div>
     <div class="bal-wrap" id="balWrap" style="display:none" onclick="showView('dep')">
       <div>
         <div class="bal-kes">BALANCE</div>
@@ -573,11 +609,12 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
   <nav id="sidebar">
     <div class="sbi on" onclick="showView('av')" title="Aviator">✈</div>
     <div class="sbi" onclick="showView('bin')" title="Binary Options">📊</div>
-    <div class="sbi" onclick="showView('dash')" title="Dashboard">◈</div>
-    <div class="sbi" onclick="showView('dep')" title="Deposit">💳</div>
+    <!-- ★ These sidebar items require login -->
+    <div class="sbi" data-auth onclick="showView('dash')" title="Dashboard">◈</div>
+    <div class="sbi" data-auth onclick="showView('dep')" title="Deposit">💳</div>
     <div class="sbi-spacer"></div>
     <div class="sbi" onclick="openModal('pf-modal')" title="Provably Fair">🔐</div>
-    <div class="sbi" onclick="openModal('auth-modal')" title="Account">👤</div>
+    <div class="sbi" id="sidebar-acct" onclick="handleAcctClick()" title="Account">👤</div>
   </nav>
 
   <!-- Viewport -->
@@ -585,6 +622,12 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
 
     <!-- ══════════════ AVIATOR VIEW ══════════════ -->
     <div id="view-av" class="view on">
+      <!-- ★ Demo banner — floats over the game, hidden when logged in -->
+      <div class="demo-banner" id="demoBannerAv">
+        <div class="demo-banner-tag">DEMO MODE</div>
+        <div class="demo-banner-text">You are viewing a live preview. Sign in to deposit and play for real.</div>
+        <button class="demo-banner-btn" onclick="openModal('auth-modal','register')">CREATE ACCOUNT</button>
+      </div>
 
       <!-- LEFT: Bet Panel A -->
       <div class="av-col-l" id="avLeftCol">
@@ -625,25 +668,14 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
             <button class="action-btn btn-generic" style="width:auto;padding:8px 20px;margin-top:4px" onclick="openModal('auth-modal')">SIGN IN</button>
           </div>
         </div>
-
-        <!-- Provably Fair -->
         <div class="pf-strip">
           <div class="pf-strip-hd">
             <span class="pf-strip-title">Provably Fair</span>
             <span class="verified-badge">✓ VERIFIED</span>
           </div>
-          <div class="pf-line">
-            <div class="pf-key">Server Seed Hash</div>
-            <div class="pf-val" id="pf-hash-short" onclick="openModal('pf-modal')">—</div>
-          </div>
-          <div class="pf-line">
-            <div class="pf-key">Client Seed</div>
-            <div class="pf-val" id="pf-client-short">—</div>
-          </div>
-          <div class="pf-line">
-            <div class="pf-key">Nonce</div>
-            <div class="pf-val" id="pf-nonce">—</div>
-          </div>
+          <div class="pf-line"><div class="pf-key">Server Seed Hash</div><div class="pf-val" id="pf-hash-short" onclick="openModal('pf-modal')">—</div></div>
+          <div class="pf-line"><div class="pf-key">Client Seed</div><div class="pf-val" id="pf-client-short">—</div></div>
+          <div class="pf-line"><div class="pf-key">Nonce</div><div class="pf-val" id="pf-nonce">—</div></div>
           <button class="pf-verify-btn" onclick="openModal('pf-modal')">🔍 VERIFY THIS ROUND</button>
         </div>
       </div>
@@ -651,13 +683,11 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
       <!-- CENTER: Flight Arena -->
       <div class="av-col-c">
         <div class="arena-wrap">
-          <!-- Header -->
           <div class="arena-header">
             <div class="live-badge"><div class="live-dot-sm"></div><span class="live-txt">LIVE</span></div>
             <span class="round-id" id="round-id-lbl">Round #—</span>
             <div class="history-pills" id="hist-pills"></div>
           </div>
-          <!-- Stage -->
           <div class="flight-stage" id="flight-stage">
             <svg id="av-svg" viewBox="0 0 700 340" preserveAspectRatio="none">
               <defs>
@@ -665,16 +695,12 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
                   <stop offset="0%" stop-color="rgba(255,204,0,0.3)" id="grad-top"/>
                   <stop offset="100%" stop-color="rgba(255,204,0,0)"/>
                 </linearGradient>
-                <filter id="glow-f">
-                  <feGaussianBlur stdDeviation="3" result="b"/>
-                  <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-                </filter>
+                <filter id="glow-f"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
                 <linearGradient id="crashGrad" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stop-color="rgba(255,23,68,0.3)"/>
                   <stop offset="100%" stop-color="rgba(255,23,68,0)"/>
                 </linearGradient>
               </defs>
-              <!-- Grid -->
               <line x1="0" y1="85" x2="700" y2="85" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
               <line x1="0" y1="170" x2="700" y2="170" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
               <line x1="0" y1="255" x2="700" y2="255" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
@@ -684,7 +710,6 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
               <path id="c-area" d="" fill="url(#curveGrad)" opacity=".6"/>
               <path id="c-line" d="" fill="none" stroke="var(--accent)" stroke-width="2.5" filter="url(#glow-f)"/>
             </svg>
-            <!-- Plane -->
             <svg id="av-plane" width="52" height="52" viewBox="0 0 52 52"
               style="position:absolute;left:14px;bottom:14px;filter:drop-shadow(0 0 8px var(--accent))">
               <g id="plane-g">
@@ -697,13 +722,11 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
                 </circle>
               </g>
             </svg>
-            <!-- Multiplier display -->
             <div class="mult-display" id="mult-display">
               <div class="mult-big state-wait" id="mult-num">WAITING</div>
               <div class="mult-sub" id="mult-sub">STARTING IN 5s</div>
             </div>
           </div>
-          <!-- Active bets ticker at bottom -->
           <div class="arena-footer" id="arena-ticker">
             <div class="ticker-item">
               <span style="font-size:9px;color:var(--txt-3);text-transform:uppercase;letter-spacing:1px;font-weight:700">Live bets:</span>
@@ -714,7 +737,6 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
 
       <!-- RIGHT: Bet Panel B + Chat -->
       <div class="av-col-r">
-        <!-- Bet Panel 2 -->
         <div class="panel" style="position:relative">
           <div class="panel-hd"><div class="panel-title">Bet · Panel 2</div></div>
           <div class="panel-body">
@@ -748,18 +770,12 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
             <button class="action-btn btn-generic" style="width:auto;padding:8px 20px;margin-top:4px" onclick="openModal('auth-modal')">SIGN IN</button>
           </div>
         </div>
-
-        <!-- Active bets panel -->
         <div class="panel">
           <div class="panel-hd"><div class="panel-title">Active Bets</div></div>
           <div class="panel-body" style="padding:8px">
-            <div class="bets-scroll" id="bets-list">
-              <div class="empty-state">No active bets this round</div>
-            </div>
+            <div class="bets-scroll" id="bets-list"><div class="empty-state">No active bets this round</div></div>
           </div>
         </div>
-
-        <!-- Live Chat -->
         <div class="panel" style="flex:1;display:flex;flex-direction:column;min-height:180px">
           <div class="panel-hd"><div class="panel-title">Live Chat</div></div>
           <div class="chat-wrap">
@@ -775,8 +791,14 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
 
     <!-- ══════════════ BINARY VIEW ══════════════ -->
     <div id="view-bin" class="view">
+      <!-- ★ Demo banner for binary too -->
+      <div class="demo-banner" id="demoBannerBin">
+        <div class="demo-banner-tag">DEMO MODE</div>
+        <div class="demo-banner-text">Live chart preview. Sign in to trade with real money.</div>
+        <button class="demo-banner-btn" onclick="openModal('auth-modal','register')">CREATE ACCOUNT</button>
+      </div>
+
       <div class="bin-col-l">
-        <!-- Chart header -->
         <div class="chart-top">
           <div class="asset-block">
             <div class="asset-sym">BTC/KES</div>
@@ -793,14 +815,12 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
             <div class="tf-tab" onclick="setTF(this,'1H')">1H</div>
           </div>
         </div>
-        <!-- Candle chart -->
         <div class="chart-stage">
           <canvas id="candle-canvas"></canvas>
         </div>
       </div>
 
       <div class="bin-col-r">
-        <!-- Timer -->
         <div class="timer-card">
           <div class="timer-svg-wrap">
             <svg viewBox="0 0 90 90">
@@ -818,7 +838,6 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
           <div style="font-size:10px;color:var(--txt-3);font-weight:700;letter-spacing:1px">TIME TO CLOSE</div>
         </div>
 
-        <!-- Direction cards -->
         <div class="panel">
           <div class="panel-hd"><div class="panel-title">Predict Direction</div></div>
           <div class="panel-body" style="padding:10px">
@@ -835,7 +854,6 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
           </div>
         </div>
 
-        <!-- Invest -->
         <div class="panel" style="position:relative">
           <div class="panel-hd"><div class="panel-title">Invest</div></div>
           <div class="panel-body">
@@ -924,8 +942,9 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
   <div class="mob-nav-row">
     <button class="mob-btn on" onclick="showView('av',this)" id="mob-av"><div class="mob-btn-icon">✈</div><div class="mob-btn-lbl">Aviator</div></button>
     <button class="mob-btn" onclick="showView('bin',this)" id="mob-bin"><div class="mob-btn-icon">📊</div><div class="mob-btn-lbl">Binary</div></button>
-    <button class="mob-btn" onclick="showView('dash',this)" id="mob-dash"><div class="mob-btn-icon">◈</div><div class="mob-btn-lbl">Account</div></button>
-    <button class="mob-btn" onclick="showView('dep',this)" id="mob-dep"><div class="mob-btn-icon">💳</div><div class="mob-btn-lbl">Deposit</div></button>
+    <!-- ★ These mobile nav items require login -->
+    <button class="mob-btn" data-auth onclick="showView('dash',this)" id="mob-dash"><div class="mob-btn-icon">◈</div><div class="mob-btn-lbl">Account</div></button>
+    <button class="mob-btn" data-auth onclick="showView('dep',this)" id="mob-dep"><div class="mob-btn-icon">💳</div><div class="mob-btn-lbl">Deposit</div></button>
   </div>
 </nav>
 </div><!-- /app -->
@@ -1008,6 +1027,7 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
 
 <script>
 'use strict';
+
 /* ═══════════════════════════════════
    THEME
 ═══════════════════════════════════ */
@@ -1020,36 +1040,65 @@ function toggleTheme(){
 }
 
 /* ═══════════════════════════════════
-   VIEW ROUTING
+   ★ AUTH-GATED NAV VISIBILITY
+   Hides all nav items with [data-auth]
+   when user is not logged in.
+═══════════════════════════════════ */
+function updateNavVisibility(){
+  const loggedIn = !!user;
+  // Hide/show nav items that require auth
+  document.querySelectorAll('[data-auth]').forEach(el => {
+    el.style.display = loggedIn ? '' : 'none';
+  });
+  // Demo badge in topbar: show only when NOT logged in
+  document.getElementById('demoBadge').style.display = loggedIn ? 'none' : 'flex';
+  // Demo banners over game views
+  document.getElementById('demoBannerAv').style.display = loggedIn ? 'none' : 'flex';
+  document.getElementById('demoBannerBin').style.display = loggedIn ? 'none' : 'flex';
+}
+
+/* ═══════════════════════════════════
+   VIEW ROUTING — blocks auth views
 ═══════════════════════════════════ */
 const views = ['av','bin','dash','dep'];
+
 function showView(id, el){
+  // ★ Block deposit and dashboard for guests
+  if(!user && (id === 'dep' || id === 'dash')){
+    toast('Please sign in to access this section','alert');
+    openModal('auth-modal','login');
+    return;
+  }
   views.forEach(v => {
     const el2 = document.getElementById('view-'+v);
     if(v === id){ el2.classList.add('on'); el2.style.display = ''; }
     else { el2.classList.remove('on'); el2.style.display = 'none'; }
   });
-  // Top nav
+  // Top nav highlight
   document.querySelectorAll('.tnav').forEach(t => t.classList.remove('on'));
   document.querySelectorAll('.tnav').forEach(t => {
     const map = {av:'AVIATOR',bin:'BINARY',dash:'DASHBOARD',dep:'DEPOSIT'};
     if(t.textContent.includes(map[id])) t.classList.add('on');
   });
-  // Sidebar
+  // Sidebar highlight
   document.querySelectorAll('.sbi').forEach((s,i) => {
     s.classList.toggle('on', i === views.indexOf(id));
   });
-  // Mobile nav
+  // Mobile nav highlight
   document.querySelectorAll('.mob-btn').forEach(b => b.classList.remove('on'));
   const mobMap = {av:'mob-av',bin:'mob-bin',dash:'mob-dash',dep:'mob-dep'};
   if(mobMap[id]) document.getElementById(mobMap[id])?.classList.add('on');
   if(id==='bin') setTimeout(resizeCandle, 80);
 }
-// Init non-active views hidden
+
+// Init: hide non-active views
 document.addEventListener('DOMContentLoaded',()=>{
   ['bin','dash','dep'].forEach(v => {
     document.getElementById('view-'+v).style.display = 'none';
   });
+  // ★ Apply demo mode on load
+  updateNavVisibility();
+  showGates();
 });
 
 /* ═══════════════════════════════════
@@ -1076,6 +1125,8 @@ function fmt(n){ return 'KES '+Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\
 function updateUI(){
   const b = document.getElementById('balNum');
   if(b) b.textContent = fmt(balance);
+  const b2 = document.getElementById('balNum2');
+  if(b2) b2.textContent = fmt(balance);
   document.getElementById('dash-bal').textContent = fmt(balance);
   const pnlEl = document.getElementById('dash-pnl');
   pnlEl.textContent = (pnl>=0?'+':'-')+fmt(Math.abs(pnl));
@@ -1105,7 +1156,7 @@ function renderTx(){
 }
 
 /* ═══════════════════════════════════
-   AUTH - Updated for Demo vs Real Balance
+   AUTH
 ═══════════════════════════════════ */
 let ageOk = false, authMode = 'login';
 
@@ -1114,6 +1165,7 @@ function setAuthMode(mode, el){
   document.querySelectorAll('#auth-seg .auth-seg-btn').forEach(b => b.classList.remove('on'));
   if(el) el.classList.add('on');
   document.getElementById('auth-confirm-field').style.display = mode==='register' ? 'block' : 'none';
+  document.getElementById('auth-submit-btn').textContent = mode==='login' ? 'ENTER PLATFORM' : 'CREATE ACCOUNT';
 }
 
 function toggleAge(){
@@ -1124,69 +1176,92 @@ function toggleAge(){
 function submitAuth(){
   const ident = document.getElementById('auth-ident').value.trim();
   const pw = document.getElementById('auth-pw').value;
+  if(!ident || !pw){ toast('Please fill all fields','alert'); return; }
+  if(authMode==='register' && !ageOk){ toast('Please confirm you are 18+','alert'); return; }
 
-  if(!ident || !pw){
-    toast('Please fill all fields','alert'); 
-    return;
-  }
-  if(authMode==='register' && !ageOk){
-    toast('Please confirm you are 18+','alert'); 
-    return;
-  }
-
-  user = { 
-    name: ident.split('@')[0] || ident.slice(0,8), 
-    ident 
-  };
-
-  // IMPORTANT CHANGE HERE:
-  balance = 0;                    // Real logged-in users start with 0
-  // balance = authMode==='register' ? 0 : 5000;   ← Old line (remove)
-
+  user = { name: ident.split('@')[0] || ident.slice(0,8), ident };
+  balance = 0;
   closeModal('auth-modal');
   onLogin();
 }
 
 function onLogin(){
+  // Show balance pill + logout
   document.getElementById('balWrap').style.display = 'flex';
-  
   document.getElementById('authBtns').innerHTML = `
-    <div class="user-pill" onclick="openModal('auth-modal')">
+    <div class="user-pill" onclick="showView('dash')">
       <div class="user-av">${user.name.charAt(0).toUpperCase()}</div>
       <div>
         <div class="user-nm">${user.name.toUpperCase()}</div>
         <div class="user-bal-sm" id="balNum2">${fmt(balance)}</div>
       </div>
-    </div>`;
+    </div>
+    <button class="logout-btn" onclick="doLogout()" title="Log out">⏻</button>`;
 
-  // Hide login gates
+  // Hide all gates
+  hideGates();
+  // ★ Update nav: show deposit/dashboard, hide demo banners
+  updateNavVisibility();
+  updateUI();
+
+  toast(`Welcome to KANDEGE! Deposit funds to start playing.`,'info');
+  // Auto-navigate to deposit so they can fund their account
+  showView('dep');
+}
+
+/* ★ Logout */
+function doLogout(){
+  user = null;
+  balance = 0; pnl = 0; avRoundCount = 0; bestMult = 1; streak = 0; wins = 0; trades = 0;
+  txLog = [];
+  renderTx();
+
+  // Restore auth buttons
+  document.getElementById('authBtns').innerHTML = `
+    <div style="display:flex;gap:6px">
+      <button class="auth-btn btn-login" onclick="openModal('auth-modal','login')">LOG IN</button>
+      <button class="auth-btn btn-register" onclick="openModal('auth-modal','register')">REGISTER</button>
+    </div>`;
+  document.getElementById('balWrap').style.display = 'none';
+
+  // Show gates again
+  showGates();
+  // ★ Update nav: hide deposit/dashboard, show demo banners
+  updateNavVisibility();
+  updateUI();
+
+  // Go back to aviator
+  showView('av');
+  toast('You have been logged out.','info');
+}
+
+/* Sidebar account icon: login if guest, dashboard if logged in */
+function handleAcctClick(){
+  if(!user) openModal('auth-modal');
+  else showView('dash');
+}
+
+/* Gate management */
+function showGates(){
+  ['gate1','gate2','gate-bin'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.style.display = 'flex';
+  });
+}
+function hideGates(){
   ['gate1','gate2','gate-bin'].forEach(id => {
     const el = document.getElementById(id);
     if(el) el.style.display = 'none';
   });
-
-  updateUI();
-
-  if(balance > 0){
-    toast(`Welcome back! Balance: ${fmt(balance)} 🎉`, 'win');
-  } else {
-    toast(`Welcome to KANDEGE! Please make your first deposit to start playing.`, 'info');
-    // Optional: auto open deposit view
-    // showView('dep');
-  }
 }
+
 function checkLogin(){
   if(!user){
-    ['gate1','gate2','gate-bin'].forEach(id => {
-      const el = document.getElementById(id);
-      if(el) el.style.display = 'flex';
-    });
+    showGates();
     return false;
   }
   return true;
 }
-// Show gates initially
-setTimeout(()=>{ if(!user) ['gate1','gate2','gate-bin'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='flex';}); }, 200);
 
 /* ═══════════════════════════════════
    PROVABLY FAIR
@@ -1217,25 +1292,24 @@ function copyEl(el){
 }
 
 /* ═══════════════════════════════════
-   CRASH POINT (6% house edge)
+   CRASH POINT
 ═══════════════════════════════════ */
 function calcCrash(){
   const r = Math.random();
-  if(r < 0.06) return 1.00; // house edge
+  if(r < 0.06) return 1.00;
   return Math.max(1.01, +(0.99/(1-r)).toFixed(2));
 }
 
 /* ═══════════════════════════════════
    AVIATOR ENGINE
 ═══════════════════════════════════ */
-let avState = 'waiting'; // waiting|flying|crashed
+let avState = 'waiting';
 let avMult = 1.0;
 let avCrashAt = 0;
 let avPoints = [];
 let avAnimId = null;
 let avRound = 0;
 let avHistory = [];
-// Two bet slots
 let bets = [
   {active:false, amount:0, cashed:false},
   {active:false, amount:0, cashed:false}
@@ -1247,6 +1321,8 @@ const multSubEl  = ()=>document.getElementById('mult-sub');
 const cLineEl    = ()=>document.getElementById('c-line');
 const cAreaEl    = ()=>document.getElementById('c-area');
 const planeEl    = ()=>document.getElementById('av-plane');
+
+function setBetMode(el, mode){ /* placeholder */ }
 
 function recalcPot(slot){
   const amt = parseFloat(document.getElementById(`av-amt${slot}`).value)||0;
@@ -1294,10 +1370,8 @@ function avWait(){
   planeEl().style.display = 'none';
   multNumEl().className = 'mult-big state-wait';
   multNumEl().textContent = 'WAITING';
-  // Reset bet buttons
   bets.forEach((b,i) => {
     if(!b.cashed && b.active){
-      // didn't cash out = lost
       pnl -= b.amount; trades++; streak = 0;
       addTx(`Aviator LOSS (Bet ${i+1})`, -b.amount, '💸','#ff1744');
     }
@@ -1327,9 +1401,7 @@ async function avFly(){
   multNumEl().className = 'mult-big state-fly';
   multSubEl().textContent = '';
   planeEl().style.display = 'block';
-  // Spawn fake players
   spawnFakePlayers();
-  // Auto cashout values
   const autoCo1 = parseFloat(document.getElementById('av-co1').value)||0;
   const autoCo2 = parseFloat(document.getElementById('av-co2').value)||0;
   const SVG_W=700, SVG_H=340;
@@ -1339,18 +1411,12 @@ async function avFly(){
     const speed = 0.015 + Math.log(avMult+1)*0.007;
     avMult = +(avMult + speed).toFixed(3);
     multNumEl().textContent = avMult.toFixed(2)+'x';
-
-    // Auto cashouts
     if(bets[0].active && !bets[0].cashed && autoCo1>1 && avMult>=autoCo1) cashOut(1);
     if(bets[1].active && !bets[1].cashed && autoCo2>1 && avMult>=autoCo2) cashOut(2);
-
-    // Update potential win display
     bets.forEach((b,i) => {
       if(b.active && !b.cashed)
         document.getElementById(`av-pot${i+1}`).textContent = fmt(b.amount*avMult);
     });
-
-    // Fake player cashouts
     fakePlayers.forEach(fp => {
       if(!fp.cashedOut && avMult >= fp.cashoutAt){
         fp.cashedOut = true;
@@ -1359,8 +1425,6 @@ async function avFly(){
     });
     renderBetsList();
     renderTicker();
-
-    // Curve
     const prog = Math.min((avMult-1)/Math.max(avCrashAt-1,0.01),1);
     const cx = prog*(SVG_W-30)+10;
     const cy = SVG_H-10 - Math.pow(prog,1.3)*(SVG_H-50);
@@ -1370,7 +1434,6 @@ async function avFly(){
       cLineEl().setAttribute('d',d);
       const last = avPoints[avPoints.length-1];
       cAreaEl().setAttribute('d',d+` L ${last.x} ${SVG_H-10} L ${avPoints[0].x} ${SVG_H-10} Z`);
-      // Move plane
       const stage = document.getElementById('flight-stage');
       const sw=stage.offsetWidth, sh=stage.offsetHeight;
       const px=(last.x/SVG_W)*sw-26, py=(last.y/SVG_H)*sh-26;
@@ -1381,7 +1444,6 @@ async function avFly(){
         document.getElementById('plane-g').setAttribute('transform',`rotate(${ang-5},26,26)`);
       }
     }
-
     if(avMult >= avCrashAt) avCrashRound();
     else avAnimId = requestAnimationFrame(tick);
   }
@@ -1438,7 +1500,6 @@ function renderTicker(){
   el.innerHTML=`<div class="ticker-item" style="margin-right:6px"><span style="font-size:9px;color:var(--txt-3);text-transform:uppercase;letter-spacing:1px;font-weight:700">Live:</span></div>`+items;
 }
 
-/* Fake players */
 const FAKE_NAMES=['P***r','M***a','J***n','W***i','A***e','D***o','K***h','L***a','F***x','T***y','N***i','B***l'];
 const FAKE_COLORS=['#ff6d00','#2979ff','#00e676','#e040fb','#00bcd4','#ff4081','#ffcc00','#69f0ae'];
 function spawnFakePlayers(){
@@ -1460,7 +1521,6 @@ function spawnFakePlayers(){
 ═══════════════════════════════════ */
 const chatNames = ['Pendo','Moses','Aisha','Kamau','Njoki','Brian','Faith','Tonny','Grace','David'];
 const chatColors = ['#ff6d00','#2979ff','#00e676','#e040fb','#ffcc00','#00bcd4','#ff4081'];
-let chatInitialized = false;
 
 function addChatMsg(name, text, isWin=false, isBig=false){
   const el = document.getElementById('chat-msgs');
@@ -1479,12 +1539,11 @@ function addChatMsg(name, text, isWin=false, isBig=false){
     <div class="cm-text">${text}</div>`;
   el.appendChild(div);
   el.scrollTop = el.scrollHeight;
-  // Trim old messages
   while(el.children.length > 40) el.removeChild(el.firstChild);
 }
 
 function sendChat(){
-  if(!user){ toast('Sign in to chat','alert'); return; }
+  if(!user){ toast('Sign in to chat','alert'); openModal('auth-modal'); return; }
   const inp = document.getElementById('chat-inp');
   const msg = inp.value.trim();
   if(!msg) return;
@@ -1493,7 +1552,6 @@ function sendChat(){
 }
 document.getElementById('chat-inp').addEventListener('keydown', e=>{ if(e.key==='Enter') sendChat(); });
 
-// Random chat messages
 const chatMsgs = [
   m=>`Flying at ${m}x, holding tight! 🤞`,
   m=>`Cashed at ${(m-0.2).toFixed(2)}x, not greedy 😂`,
@@ -1512,7 +1570,6 @@ setInterval(()=>{
   }
 }, 3500);
 
-// Seed initial chat
 setTimeout(()=>{
   addChatMsg('Pendo','Wagwan everyone 👋');
   addChatMsg('Moses','Good luck all!');
@@ -1556,7 +1613,6 @@ function drawCandles(){
   const GRID = isdark?'rgba(255,255,255,0.04)':'rgba(0,0,80,0.06)';
   const LABL = isdark?'rgba(120,160,200,0.7)':'rgba(40,70,130,0.7)';
   cctx.clearRect(0,0,W*2,H*2);
-
   const vis = [...candles.slice(-75), liveCandle];
   const mn = Math.min(...vis.map(c=>c.l))*.9997;
   const mx = Math.max(...vis.map(c=>c.h))*1.0003;
@@ -1565,8 +1621,6 @@ function drawCandles(){
   const cw = (W-PAD.l-PAD.r)/vis.length;
   const toX = i => PAD.l + i*cw + cw*.5;
   const toY = p => H-PAD.b-(p-mn)/rng*(H-PAD.t-PAD.b);
-
-  // Grid + labels
   cctx.strokeStyle=GRID; cctx.lineWidth=1;
   cctx.fillStyle=LABL; cctx.font=`9px Share Tech Mono`; cctx.textAlign='right';
   for(let i=0;i<=4;i++){
@@ -1575,8 +1629,6 @@ function drawCandles(){
     const price=mx-rng*i/4;
     cctx.fillText(Math.round(price/1000)+'K',PAD.l-3,y+3);
   }
-
-  // Volume shadow bars
   const maxVol = vis.reduce((a,c)=>Math.max(a,Math.abs(c.c-c.o)),0)||1;
   vis.forEach((c,i)=>{
     const vol=Math.abs(c.c-c.o)/maxVol;
@@ -1584,15 +1636,11 @@ function drawCandles(){
     cctx.fillStyle = c.c>=c.o?'rgba(0,230,118,0.06)':'rgba(255,23,68,0.06)';
     cctx.fillRect(toX(i)-bw/2, H-PAD.b-vol*(H-PAD.t-PAD.b), bw, vol*(H-PAD.t-PAD.b));
   });
-
-  // Candle bodies + wicks
   vis.forEach((c,i)=>{
     const x=toX(i), bw=Math.max(cw*.55,1.5);
     const isUp=c.c>=c.o, col=isUp?UP:DN;
-    // Wick
     cctx.strokeStyle=col; cctx.lineWidth=1.2;
     cctx.beginPath(); cctx.moveTo(x,toY(c.h)); cctx.lineTo(x,toY(c.l)); cctx.stroke();
-    // Body
     const y1=toY(Math.max(c.o,c.c)), y2=toY(Math.min(c.o,c.c));
     const bh=Math.max(y2-y1,1.5);
     if(i===vis.length-1){ cctx.shadowColor=col; cctx.shadowBlur=10; }
@@ -1600,23 +1648,18 @@ function drawCandles(){
     cctx.fillRect(x-bw/2,y1,bw,bh);
     cctx.shadowBlur=0;
   });
-
-  // Last price line
-  const ly=toY(liveCandle.c), isUp=liveCandle.c>=liveCandle.o;
-  cctx.strokeStyle=isUp?UP:DN; cctx.lineWidth=1; cctx.setLineDash([4,4]);
+  const ly=toY(liveCandle.c), isUp2=liveCandle.c>=liveCandle.o;
+  cctx.strokeStyle=isUp2?UP:DN; cctx.lineWidth=1; cctx.setLineDash([4,4]);
   cctx.beginPath(); cctx.moveTo(PAD.l,ly); cctx.lineTo(W-PAD.r,ly); cctx.stroke();
   cctx.setLineDash([]);
-  // Price tag
   const LBL_W=58, LBL_H=17;
-  cctx.fillStyle=isUp?UP:DN;
+  cctx.fillStyle=isUp2?UP:DN;
   const rx=W-PAD.r-LBL_W;
   cctx.beginPath();
   cctx.roundRect?cctx.roundRect(rx,ly-LBL_H/2,LBL_W,LBL_H,3):cctx.rect(rx,ly-LBL_H/2,LBL_W,LBL_H);
   cctx.fill();
   cctx.fillStyle='#fff'; cctx.font='bold 8px Share Tech Mono'; cctx.textAlign='center';
   cctx.fillText(Math.round(liveCandle.c/1000)+'K',rx+LBL_W/2,ly+3);
-
-  // Time axis
   cctx.fillStyle=LABL; cctx.font='8px Share Tech Mono'; cctx.textAlign='center';
   const step=Math.max(1,Math.floor(vis.length/6));
   for(let i=0;i<vis.length;i+=step){
@@ -1722,37 +1765,22 @@ function setTF(el,tf){
 /* ═══════════════════════════════════
    PAYHERO DEPOSIT
 ═══════════════════════════════════ */
-function sanitizePhone(p){
-  let s=p.replace(/[\s\-]/g,'');
-  if(s.startsWith('0')) s='254'+s.slice(1);
-  if(s.startsWith('+')) s=s.slice(1);
-  return /^254[17]\d{8}$/.test(s)?s:null;
-}
-
 async function initiateDeposit() {
   const phone = document.getElementById('dep-phone').value.trim();
   const amount = parseFloat(document.getElementById('dep-amount').value) || 0;
-
-  if (!phone || amount < 10) {
-    toast('Please enter valid phone and amount ≥ KES 10', 'alert');
-    return;
-  }
-
+  if (!phone || amount < 10) { toast('Please enter valid phone and amount ≥ KES 10', 'alert'); return; }
   const btn = document.getElementById('dep-btn');
   btn.disabled = true;
   btn.textContent = '⏳ SENDING M-PESA PROMPT...';
-
   try {
     const res = await fetch('/api/deposit/initiate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ phone, amount })
     });
-
     const data = await res.json();
-
     if (data.success) {
-      toast(`📱 STK Push sent to ${phone}. Open your phone and enter M-Pesa PIN.`, 'info');
+      toast(`📱 STK Push sent to ${phone}. Enter your M-Pesa PIN on your phone.`, 'info');
     } else {
       toast(data.error || 'Failed to send prompt', 'alert');
     }
