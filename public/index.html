@@ -5,221 +5,69 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
 <title>KANDEGE — Aviator & Binary</title>
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800;900&family=Share+Tech+Mono&family=Barlow+Condensed:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-/* ═══════════════════════════════════════════════════
-   THEME TOKENS
-═══════════════════════════════════════════════════ */
-[data-theme="dark"]{
-  --void:#040810;
-  --base:#070e1c;
-  --surface:#0c1628;
-  --surface2:#111f38;
-  --overlay:rgba(7,14,28,0.97);
-  --glass:rgba(11,20,42,0.75);
-  --glass2:rgba(6,13,28,0.88);
-  --input-bg:rgba(4,10,22,0.8);
-  --border:rgba(255,255,255,0.07);
-  --border-hi:rgba(255,204,0,0.5);
-  --txt-1:#f0f6ff;
-  --txt-2:#7a99c0;
-  --txt-3:#3a5570;
-  --accent:#ffcc00;
-  --accent-dim:rgba(255,204,0,0.12);
-  --green:#00e676;
-  --green-dim:rgba(0,230,118,0.1);
-  --red:#ff1744;
-  --red-dim:rgba(255,23,68,0.1);
-  --blue:#2979ff;
-  --blue-dim:rgba(41,121,255,0.1);
-  --orange:#ff6d00;
-  --shadow:0 4px 32px rgba(0,0,0,0.7);
-  --shadow-sm:0 2px 12px rgba(0,0,0,0.5);
-  --nav-blur:rgba(4,8,16,0.96);
-  --scrollbar:rgba(255,255,255,0.06);
-}
-[data-theme="light"]{
-  --void:#e8eef8;
-  --base:#f0f4fc;
-  --surface:#ffffff;
-  --surface2:#f7f9ff;
-  --overlay:rgba(240,244,252,0.97);
-  --glass:rgba(255,255,255,0.85);
-  --glass2:rgba(245,248,255,0.95);
-  --input-bg:rgba(255,255,255,0.9);
-  --border:rgba(0,0,0,0.08);
-  --border-hi:rgba(200,150,0,0.5);
-  --txt-1:#0a1628;
-  --txt-2:#4a6a9a;
-  --txt-3:#a0b8d0;
-  --accent:#d4a000;
-  --accent-dim:rgba(212,160,0,0.1);
-  --green:#00a651;
-  --green-dim:rgba(0,166,81,0.08);
-  --red:#d50032;
-  --red-dim:rgba(213,0,50,0.08);
-  --blue:#1a56db;
-  --blue-dim:rgba(26,86,219,0.08);
-  --orange:#cc5500;
-  --shadow:0 4px 24px rgba(0,0,40,0.1);
-  --shadow-sm:0 2px 8px rgba(0,0,40,0.07);
-  --nav-blur:rgba(240,244,252,0.97);
-  --scrollbar:rgba(0,0,0,0.07);
-}
-
-/* ═══════════════════════════════════════════════════
-   RESET
-═══════════════════════════════════════════════════ */
+[data-theme="dark"]{--void:#040810;--base:#070e1c;--surface:#0c1628;--surface2:#111f38;--overlay:rgba(7,14,28,0.97);--glass:rgba(11,20,42,0.75);--glass2:rgba(6,13,28,0.88);--input-bg:rgba(4,10,22,0.8);--border:rgba(255,255,255,0.07);--border-hi:rgba(255,204,0,0.5);--txt-1:#f0f6ff;--txt-2:#7a99c0;--txt-3:#3a5570;--accent:#ffcc00;--accent-dim:rgba(255,204,0,0.12);--green:#00e676;--green-dim:rgba(0,230,118,0.1);--red:#ff1744;--red-dim:rgba(255,23,68,0.1);--blue:#2979ff;--blue-dim:rgba(41,121,255,0.1);--orange:#ff6d00;--shadow:0 4px 32px rgba(0,0,0,0.7);--shadow-sm:0 2px 12px rgba(0,0,0,0.5);--nav-blur:rgba(4,8,16,0.96);--scrollbar:rgba(255,255,255,0.06)}
+[data-theme="light"]{--void:#e8eef8;--base:#f0f4fc;--surface:#ffffff;--surface2:#f7f9ff;--overlay:rgba(240,244,252,0.97);--glass:rgba(255,255,255,0.85);--glass2:rgba(245,248,255,0.95);--input-bg:rgba(255,255,255,0.9);--border:rgba(0,0,0,0.08);--border-hi:rgba(200,150,0,0.5);--txt-1:#0a1628;--txt-2:#4a6a9a;--txt-3:#a0b8d0;--accent:#d4a000;--accent-dim:rgba(212,160,0,0.1);--green:#00a651;--green-dim:rgba(0,166,81,0.08);--red:#d50032;--red-dim:rgba(213,0,50,0.08);--blue:#1a56db;--blue-dim:rgba(26,86,219,0.08);--orange:#cc5500;--shadow:0 4px 24px rgba(0,0,40,0.1);--shadow-sm:0 2px 8px rgba(0,0,40,0.07);--nav-blur:rgba(240,244,252,0.97);--scrollbar:rgba(0,0,0,0.07)}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
 input[type=number]{-moz-appearance:textfield}
 html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo 2',sans-serif;overflow:hidden;transition:background .3s,color .3s}
-::-webkit-scrollbar{width:3px;height:3px}
-::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:2px}
-::-webkit-scrollbar-track{background:transparent}
-
-/* ═══════════════════════════════════════════════════
-   APP SHELL
-═══════════════════════════════════════════════════ */
+::-webkit-scrollbar{width:3px;height:3px}::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:2px}::-webkit-scrollbar-track{background:transparent}
 #app{display:flex;flex-direction:column;height:100vh;position:relative}
-
-/* ═══════════════════════════════════════════════════
-   TOPBAR
-═══════════════════════════════════════════════════ */
-#topbar{
-  height:52px;display:flex;align-items:center;padding:0 14px;gap:10px;
-  background:var(--nav-blur);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);position:relative;z-index:300;flex-shrink:0;
-  box-shadow:var(--shadow-sm);
-}
+#topbar{height:52px;display:flex;align-items:center;padding:0 14px;gap:10px;background:var(--nav-blur);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);position:relative;z-index:300;flex-shrink:0;box-shadow:var(--shadow-sm)}
 .logo-mark{display:flex;align-items:center;gap:7px;flex-shrink:0;text-decoration:none}
-.logo-icon{width:30px;height:30px;border-radius:7px;background:var(--accent);
-  display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-.logo-text{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;
-  letter-spacing:2px;color:var(--txt-1);line-height:1}
-.logo-text span{color:var(--accent)}
+.logo-icon{width:30px;height:30px;border-radius:7px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.logo-text{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:2px;color:var(--txt-1);line-height:1}.logo-text span{color:var(--accent)}
 .top-divider{width:1px;height:22px;background:var(--border);flex-shrink:0}
-.top-nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1}
-.top-nav::-webkit-scrollbar{display:none}
-.tnav{padding:5px 12px;border-radius:6px;font-size:12px;font-weight:700;letter-spacing:.8px;
-  cursor:pointer;transition:all .18s;color:var(--txt-2);white-space:nowrap;border:1px solid transparent;
-  display:flex;align-items:center;gap:5px}
-.tnav:hover{color:var(--txt-1);background:var(--glass)}
-.tnav.on{color:var(--accent);border-color:var(--border-hi);background:var(--accent-dim)}
-.tnav-dot{width:6px;height:6px;border-radius:50%;background:var(--green);
-  box-shadow:0 0 6px var(--green);animation:pulse 1.5s infinite;display:none}
-.tnav.on .tnav-dot{display:block}
+.top-nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1}.top-nav::-webkit-scrollbar{display:none}
+.tnav{padding:5px 12px;border-radius:6px;font-size:12px;font-weight:700;letter-spacing:.8px;cursor:pointer;transition:all .18s;color:var(--txt-2);white-space:nowrap;border:1px solid transparent;display:flex;align-items:center;gap:5px}
+.tnav:hover{color:var(--txt-1);background:var(--glass)}.tnav.on{color:var(--accent);border-color:var(--border-hi);background:var(--accent-dim)}
+.tnav-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse 1.5s infinite;display:none}.tnav.on .tnav-dot{display:block}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
 .top-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-shrink:0}
-/* ★ DEMO BADGE — visible only when not logged in */
-.demo-badge{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:5px;
-  background:rgba(255,204,0,0.1);border:1px solid rgba(255,204,0,0.25);
-  font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;
-  letter-spacing:1.2px;color:var(--accent);animation:demoPulse 2.5s ease-in-out infinite}
-.demo-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);
-  animation:pulse 1.5s infinite}
+.demo-badge{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:5px;background:rgba(255,204,0,0.1);border:1px solid rgba(255,204,0,0.25);font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.2px;color:var(--accent);animation:demoPulse 2.5s ease-in-out infinite}
+.demo-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 1.5s infinite}
 @keyframes demoPulse{0%,100%{opacity:1}50%{opacity:.6}}
-.bal-wrap{display:flex;align-items:center;gap:8px;padding:5px 12px;
-  background:var(--glass);border:1px solid var(--border);border-radius:8px;cursor:pointer}
+.bal-wrap{display:flex;align-items:center;gap:8px;padding:5px 12px;background:var(--glass);border:1px solid var(--border);border-radius:8px;cursor:pointer}
 .bal-kes{font-size:9px;font-weight:700;letter-spacing:1px;color:var(--txt-2)}
 .bal-num{font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:400;color:var(--accent)}
-.bal-plus{width:20px;height:20px;border-radius:5px;background:var(--accent);
-  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;
-  color:#000;cursor:pointer;transition:transform .15s}
-.bal-plus:hover{transform:scale(1.12)}
-.theme-toggle{width:32px;height:32px;border-radius:7px;border:1px solid var(--border);
-  background:var(--glass);cursor:pointer;display:flex;align-items:center;justify-content:center;
-  font-size:14px;transition:all .18s;flex-shrink:0}
-.theme-toggle:hover{border-color:var(--border-hi)}
-.auth-btn{padding:6px 14px;border-radius:7px;border:none;cursor:pointer;font-family:'Exo 2',sans-serif;
-  font-size:12px;font-weight:700;letter-spacing:.5px;transition:all .18s;white-space:nowrap}
-.btn-login{background:transparent;border:1px solid var(--border-hi);color:var(--accent)}
-.btn-login:hover{background:var(--accent-dim)}
-.btn-register{background:var(--accent);color:#000}
-.btn-register:hover{filter:brightness(1.1)}
-.user-pill{display:flex;align-items:center;gap:7px;padding:4px 10px 4px 5px;
-  background:var(--glass);border:1px solid var(--border);border-radius:20px;cursor:pointer}
-.user-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--orange));
-  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#000}
-.user-nm{font-size:12px;font-weight:700;color:var(--txt-1)}
-.user-bal-sm{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--accent)}
-/* ★ Logout button */
-.logout-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);
-  background:var(--glass);cursor:pointer;display:flex;align-items:center;justify-content:center;
-  font-size:13px;color:var(--txt-3);transition:all .18s;flex-shrink:0}
-.logout-btn:hover{border-color:var(--red);color:var(--red);background:var(--red-dim)}
-
-/* ═══════════════════════════════════════════════════
-   MAIN LAYOUT
-═══════════════════════════════════════════════════ */
+.bal-plus{width:20px;height:20px;border-radius:5px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#000;cursor:pointer;transition:transform .15s}.bal-plus:hover{transform:scale(1.12)}
+.theme-toggle{width:32px;height:32px;border-radius:7px;border:1px solid var(--border);background:var(--glass);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .18s;flex-shrink:0}.theme-toggle:hover{border-color:var(--border-hi)}
+.auth-btn{padding:6px 14px;border-radius:7px;border:none;cursor:pointer;font-family:'Exo 2',sans-serif;font-size:12px;font-weight:700;letter-spacing:.5px;transition:all .18s;white-space:nowrap}
+.btn-login{background:transparent;border:1px solid var(--border-hi);color:var(--accent)}.btn-login:hover{background:var(--accent-dim)}
+.btn-register{background:var(--accent);color:#000}.btn-register:hover{filter:brightness(1.1)}
+.user-pill{display:flex;align-items:center;gap:7px;padding:4px 10px 4px 5px;background:var(--glass);border:1px solid var(--border);border-radius:20px;cursor:pointer}
+.user-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--orange));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#000}
+.user-nm{font-size:12px;font-weight:700;color:var(--txt-1)}.user-bal-sm{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--accent)}
+.logout-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--glass);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--txt-3);transition:all .18s;flex-shrink:0}.logout-btn:hover{border-color:var(--red);color:var(--red);background:var(--red-dim)}
 #main-wrap{display:flex;flex:1;overflow:hidden}
-#sidebar{
-  width:52px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0;
-  background:var(--glass2);border-right:1px solid var(--border);flex-shrink:0;
-}
-.sbi{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:all .18s;border:1px solid transparent;color:var(--txt-3);
-  font-size:17px;position:relative;flex-shrink:0}
-.sbi:hover{color:var(--txt-2);background:var(--glass)}
-.sbi.on{color:var(--accent);border-color:var(--border-hi);background:var(--accent-dim)}
-.sbi.on::before{content:'';position:absolute;left:-1px;top:50%;transform:translateY(-50%);
-  width:3px;height:20px;background:var(--accent);border-radius:0 3px 3px 0}
+#sidebar{width:52px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0;background:var(--glass2);border-right:1px solid var(--border);flex-shrink:0}
+.sbi{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;border:1px solid transparent;color:var(--txt-3);font-size:17px;position:relative;flex-shrink:0}
+.sbi:hover{color:var(--txt-2);background:var(--glass)}.sbi.on{color:var(--accent);border-color:var(--border-hi);background:var(--accent-dim)}
+.sbi.on::before{content:'';position:absolute;left:-1px;top:50%;transform:translateY(-50%);width:3px;height:20px;background:var(--accent);border-radius:0 3px 3px 0}
 .sbi-spacer{flex:1}
 #viewport{flex:1;overflow:hidden;position:relative}
-.view{position:absolute;inset:0;display:none;overflow:hidden}
-.view.on{display:flex}
-
-/* ═══════════════════════════════════════════════════
-   ★ DEMO BANNER — floats over game views
-═══════════════════════════════════════════════════ */
-.demo-banner{
-  position:absolute;top:0;left:0;right:0;z-index:20;
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  padding:7px 14px;
-  background:linear-gradient(90deg,rgba(255,204,0,0.06),rgba(255,204,0,0.12),rgba(255,204,0,0.06));
-  border-bottom:1px solid rgba(255,204,0,0.15);
-  font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.8px;
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-}
-.demo-banner-tag{padding:2px 8px;border-radius:3px;background:rgba(255,204,0,0.18);
-  border:1px solid rgba(255,204,0,0.3);font-family:'Barlow Condensed',sans-serif;
-  font-size:12px;font-weight:800;letter-spacing:1.5px}
+.view{position:absolute;inset:0;display:none;overflow:hidden}.view.on{display:flex}
+.demo-banner{position:absolute;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:center;gap:10px;padding:7px 14px;background:linear-gradient(90deg,rgba(255,204,0,0.06),rgba(255,204,0,0.12),rgba(255,204,0,0.06));border-bottom:1px solid rgba(255,204,0,0.15);font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.8px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.demo-banner-tag{padding:2px 8px;border-radius:3px;background:rgba(255,204,0,0.18);border:1px solid rgba(255,204,0,0.3);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;letter-spacing:1.5px}
 .demo-banner-text{color:var(--txt-2);font-weight:600}
-.demo-banner-btn{padding:4px 14px;border-radius:5px;border:1px solid var(--border-hi);
-  background:var(--accent);color:#000;font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;font-weight:800;letter-spacing:1px;cursor:pointer;transition:all .18s;
-  text-transform:uppercase}
-.demo-banner-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
-
-/* ═══════════════════════════════════════════════════
-   AVIATOR VIEW — 3 COLUMN
-═══════════════════════════════════════════════════ */
+.demo-banner-btn{padding:4px 14px;border-radius:5px;border:1px solid var(--border-hi);background:var(--accent);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;letter-spacing:1px;cursor:pointer;transition:all .18s;text-transform:uppercase}.demo-banner-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
 #view-av{flex-direction:row;gap:0}
-.av-col-l,.av-col-r{width:230px;flex-shrink:0;display:flex;flex-direction:column;
-  border-right:1px solid var(--border);overflow-y:auto;padding:10px;gap:8px}
+.av-col-l,.av-col-r{width:230px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid var(--border);overflow-y:auto;padding:10px;gap:8px}
 .av-col-r{border-right:none;border-left:1px solid var(--border)}
 .av-col-c{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
-
-/* ═══════════════════════════════════════════════════
-   GLASS PANELS
-═══════════════════════════════════════════════════ */
-.panel{background:var(--glass);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .2s}
-.panel:hover{border-color:rgba(255,255,255,0.12)}
+.panel{background:var(--glass);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .2s}.panel:hover{border-color:rgba(255,255,255,0.12)}
 .panel-hd{padding:9px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px}
 .panel-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;color:var(--txt-2);text-transform:uppercase}
 .panel-body{padding:12px}
-
-/* ═══════════════════════════════════════════════════
-   FLIGHT ARENA
-═══════════════════════════════════════════════════ */
 .arena-wrap{flex:1;display:flex;flex-direction:column;position:relative;background:var(--surface);overflow:hidden}
 .arena-header{padding:8px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
-.live-badge{display:flex;align-items:center;gap:5px;padding:3px 8px;border-radius:4px;
-  background:rgba(0,230,118,0.12);border:1px solid rgba(0,230,118,0.25)}
+.live-badge{display:flex;align-items:center;gap:5px;padding:3px 8px;border-radius:4px;background:rgba(0,230,118,0.12);border:1px solid rgba(0,230,118,0.25)}
 .live-dot-sm{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);animation:pulse 1.4s infinite}
 .live-txt{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--green)}
 .round-id{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt-3)}
-.history-pills{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin-left:auto}
-.history-pills::-webkit-scrollbar{display:none}
+.history-pills{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin-left:auto}.history-pills::-webkit-scrollbar{display:none}
 .hpill{padding:2px 8px;border-radius:3px;font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:400;white-space:nowrap;flex-shrink:0}
 .hpill.lo{background:rgba(255,23,68,0.15);color:var(--red);border:1px solid rgba(255,23,68,0.2)}
 .hpill.md{background:rgba(255,204,0,0.12);color:var(--accent);border:1px solid rgba(255,204,0,0.2)}
@@ -234,363 +82,162 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
 .mult-big.state-wait{color:var(--txt-3);font-size:clamp(20px,3.5vw,36px)}
 .mult-sub{font-size:12px;letter-spacing:2px;color:var(--txt-3);font-weight:700;margin-top:6px;font-family:'Barlow Condensed',sans-serif}
 #av-plane{position:absolute;pointer-events:none}
-.arena-footer{height:36px;border-top:1px solid var(--border);display:flex;align-items:center;
-  padding:0 14px;gap:8px;flex-shrink:0;overflow:hidden}
+.arena-footer{height:36px;border-top:1px solid var(--border);display:flex;align-items:center;padding:0 14px;gap:8px;flex-shrink:0;overflow:hidden}
 .ticker-item{display:flex;align-items:center;gap:5px;white-space:nowrap;font-size:11px;color:var(--txt-2);flex-shrink:0}
-.ticker-name{font-weight:700}
-.ticker-mult{font-family:'Share Tech Mono',monospace;font-weight:400;color:var(--green)}
-.ticker-amt{color:var(--txt-3)}
-
-/* ═══════════════════════════════════════════════════
-   BET PANEL CONTROLS
-═══════════════════════════════════════════════════ */
+.ticker-name{font-weight:700}.ticker-mult{font-family:'Share Tech Mono',monospace;font-weight:400;color:var(--green)}.ticker-amt{color:var(--txt-3)}
 .bet-tabs{display:flex;background:var(--surface);border-radius:7px;padding:3px;gap:2px;margin-bottom:10px}
-.bt{flex:1;padding:6px;border-radius:5px;text-align:center;font-size:11px;font-weight:700;
-  letter-spacing:.5px;cursor:pointer;transition:all .18s;color:var(--txt-2)}
-.bt.on{background:var(--accent);color:#000}
+.bt{flex:1;padding:6px;border-radius:5px;text-align:center;font-size:11px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:all .18s;color:var(--txt-2)}.bt.on{background:var(--accent);color:#000}
 .inp-group{position:relative;margin-bottom:8px}
 .inp-label{font-size:9px;font-weight:700;letter-spacing:1.2px;color:var(--txt-3);margin-bottom:4px;display:block;text-transform:uppercase}
-.inp-row{display:flex;align-items:center;background:var(--input-bg);border:1px solid var(--border);
-  border-radius:7px;overflow:hidden;transition:border-color .18s}
-.inp-row:focus-within{border-color:var(--border-hi)}
+.inp-row{display:flex;align-items:center;background:var(--input-bg);border:1px solid var(--border);border-radius:7px;overflow:hidden;transition:border-color .18s}.inp-row:focus-within{border-color:var(--border-hi)}
 .inp-pfx{padding:0 9px;font-size:10px;font-weight:700;color:var(--txt-3);letter-spacing:.5px;border-right:1px solid var(--border);white-space:nowrap}
-.inp-field{flex:1;background:transparent;border:none;outline:none;padding:9px 10px;
-  font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--txt-1)}
+.inp-field{flex:1;background:transparent;border:none;outline:none;padding:9px 10px;font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--txt-1)}
 .q-row{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:5px}
-.q-btn{padding:5px;border-radius:5px;border:1px solid var(--border);background:var(--glass);
-  color:var(--txt-2);font-size:10px;font-weight:700;cursor:pointer;text-align:center;transition:all .18s}
-.q-btn:hover{border-color:var(--border-hi);color:var(--accent)}
+.q-btn{padding:5px;border-radius:5px;border:1px solid var(--border);background:var(--glass);color:var(--txt-2);font-size:10px;font-weight:700;cursor:pointer;text-align:center;transition:all .18s}.q-btn:hover{border-color:var(--border-hi);color:var(--accent)}
 .auto-cashout-row{display:flex;align-items:center;justify-content:space-between;margin:8px 0;gap:6px}
 .ac-label{font-size:11px;color:var(--txt-2);font-weight:600}
-.ac-inp{width:72px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;
-  padding:5px 8px;font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--txt-1);
-  outline:none;text-align:center;transition:border-color .18s}
-.ac-inp:focus{border-color:var(--border-hi)}
-.pot-box{background:rgba(0,230,118,0.06);border:1px solid rgba(0,230,118,0.15);
-  border-radius:7px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;margin:8px 0}
+.ac-inp{width:72px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--txt-1);outline:none;text-align:center;transition:border-color .18s}.ac-inp:focus{border-color:var(--border-hi)}
+.pot-box{background:rgba(0,230,118,0.06);border:1px solid rgba(0,230,118,0.15);border-radius:7px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;margin:8px 0}
 .pot-lbl{font-size:9px;font-weight:700;letter-spacing:1px;color:var(--txt-3);text-transform:uppercase}
 .pot-val{font-family:'Share Tech Mono',monospace;font-size:16px;color:var(--green)}
-.action-btn{width:100%;padding:12px;border-radius:8px;border:none;cursor:pointer;
-  font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:1.5px;
-  transition:all .2s;text-transform:uppercase;margin-top:4px}
+.action-btn{width:100%;padding:12px;border-radius:8px;border:none;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:1.5px;transition:all .2s;text-transform:uppercase;margin-top:4px}
 .action-btn:disabled{opacity:.35;cursor:not-allowed;transform:none!important}
-.btn-place{background:var(--accent);color:#000;box-shadow:0 4px 20px rgba(255,204,0,.3)}
-.btn-place:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 28px rgba(255,204,0,.45)}
-.btn-cashout{background:linear-gradient(135deg,#ff6d00,#ff1744);color:#fff;box-shadow:0 4px 20px rgba(255,109,0,.3)}
-.btn-cashout:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 28px rgba(255,109,0,.5)}
-.btn-up{background:var(--green);color:#000;box-shadow:0 4px 20px rgba(0,230,118,.25)}
-.btn-up:hover:not(:disabled){transform:translateY(-1px)}
-.btn-dn{background:var(--red);color:#fff;box-shadow:0 4px 20px rgba(255,23,68,.25)}
-.btn-dn:hover:not(:disabled){transform:translateY(-1px)}
-.btn-generic{background:var(--blue);color:#fff;box-shadow:0 4px 16px rgba(41,121,255,.25)}
-.btn-generic:hover:not(:disabled){transform:translateY(-1px)}
-
-/* ═══════════════════════════════════════════════════
-   ACTIVE BETS LIST
-═══════════════════════════════════════════════════ */
+.btn-place{background:var(--accent);color:#000;box-shadow:0 4px 20px rgba(255,204,0,.3)}.btn-place:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 28px rgba(255,204,0,.45)}
+.btn-cashout{background:linear-gradient(135deg,#ff6d00,#ff1744);color:#fff;box-shadow:0 4px 20px rgba(255,109,0,.3)}.btn-cashout:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 28px rgba(255,109,0,.5)}
+.btn-up{background:var(--green);color:#000;box-shadow:0 4px 20px rgba(0,230,118,.25)}.btn-up:hover:not(:disabled){transform:translateY(-1px)}
+.btn-dn{background:var(--red);color:#fff;box-shadow:0 4px 20px rgba(255,23,68,.25)}.btn-dn:hover:not(:disabled){transform:translateY(-1px)}
+.btn-generic{background:var(--blue);color:#fff;box-shadow:0 4px 16px rgba(41,121,255,.25)}.btn-generic:hover:not(:disabled){transform:translateY(-1px)}
 .bets-scroll{display:flex;flex-direction:column;gap:4px;max-height:160px;overflow-y:auto}
-.b-row{display:grid;grid-template-columns:18px 1fr auto auto;gap:6px;align-items:center;
-  padding:6px 8px;background:var(--glass);border:1px solid var(--border);border-radius:7px;font-size:11px}
-.b-dot{width:6px;height:6px;border-radius:50%}
-.b-name{font-weight:700;color:var(--txt-2)}
-.b-amt{font-family:'Share Tech Mono',monospace;color:var(--blue)}
-.b-win{font-family:'Share Tech Mono',monospace;color:var(--green)}
+.b-row{display:grid;grid-template-columns:18px 1fr auto auto;gap:6px;align-items:center;padding:6px 8px;background:var(--glass);border:1px solid var(--border);border-radius:7px;font-size:11px}
+.b-dot{width:6px;height:6px;border-radius:50%}.b-name{font-weight:700;color:var(--txt-2)}.b-amt{font-family:'Share Tech Mono',monospace;color:var(--blue)}.b-win{font-family:'Share Tech Mono',monospace;color:var(--green)}
 .empty-state{font-size:11px;color:var(--txt-3);text-align:center;padding:14px 0;font-style:italic}
-
-/* ═══════════════════════════════════════════════════
-   PROVABLY FAIR STRIP
-═══════════════════════════════════════════════════ */
 .pf-strip{background:var(--glass);border:1px solid var(--border);border-radius:8px;padding:10px;margin-top:2px}
 .pf-strip-hd{display:flex;align-items:center;gap:6px;margin-bottom:8px}
 .pf-strip-title{font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--txt-3);text-transform:uppercase}
-.verified-badge{padding:2px 5px;background:var(--green-dim);border:1px solid rgba(0,230,118,.25);
-  border-radius:3px;font-size:8px;font-weight:700;letter-spacing:1px;color:var(--green)}
-.pf-line{margin-bottom:5px}
-.pf-key{font-size:8px;color:var(--txt-3);letter-spacing:.8px;margin-bottom:1px;text-transform:uppercase}
-.pf-val{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--blue);word-break:break-all;cursor:pointer}
-.pf-val:hover{color:var(--accent)}
-.pf-verify-btn{width:100%;margin-top:8px;padding:5px;border-radius:5px;border:1px solid var(--border);
-  background:transparent;color:var(--txt-2);font-size:9px;font-weight:700;letter-spacing:1px;cursor:pointer;
-  transition:all .18s;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif}
-.pf-verify-btn:hover{border-color:var(--border-hi);color:var(--accent)}
-
-/* ═══════════════════════════════════════════════════
-   LIVE CHAT PANEL
-═══════════════════════════════════════════════════ */
+.verified-badge{padding:2px 5px;background:var(--green-dim);border:1px solid rgba(0,230,118,.25);border-radius:3px;font-size:8px;font-weight:700;letter-spacing:1px;color:var(--green)}
+.pf-line{margin-bottom:5px}.pf-key{font-size:8px;color:var(--txt-3);letter-spacing:.8px;margin-bottom:1px;text-transform:uppercase}
+.pf-val{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--blue);word-break:break-all;cursor:pointer}.pf-val:hover{color:var(--accent)}
+.pf-verify-btn{width:100%;margin-top:8px;padding:5px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--txt-2);font-size:9px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .18s;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif}.pf-verify-btn:hover{border-color:var(--border-hi);color:var(--accent)}
 .chat-wrap{display:flex;flex-direction:column;height:100%}
 .chat-msgs{flex:1;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:5px}
 .chat-msg{padding:6px 8px;background:var(--glass);border-radius:7px;font-size:11px;border:1px solid var(--border)}
-.chat-msg.is-win{border-color:rgba(0,230,118,.2);background:rgba(0,230,118,.05)}
-.chat-msg.is-big{border-color:rgba(255,204,0,.25);background:rgba(255,204,0,.06)}
-.cm-header{display:flex;align-items:center;gap:5px;margin-bottom:2px}
-.cm-av{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#000;flex-shrink:0}
-.cm-name{font-weight:700;font-size:10px;color:var(--txt-2)}
-.cm-time{font-size:9px;color:var(--txt-3);margin-left:auto}
-.cm-text{color:var(--txt-1);line-height:1.4}
-.cm-mult{font-family:'Share Tech Mono',monospace;font-weight:400}
+.chat-msg.is-win{border-color:rgba(0,230,118,.2);background:rgba(0,230,118,.05)}.chat-msg.is-big{border-color:rgba(255,204,0,.25);background:rgba(255,204,0,.06)}
+.cm-header{display:flex;align-items:center;gap:5px;margin-bottom:2px}.cm-av{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#000;flex-shrink:0}.cm-name{font-weight:700;font-size:10px;color:var(--txt-2)}.cm-time{font-size:9px;color:var(--txt-3);margin-left:auto}.cm-text{color:var(--txt-1);line-height:1.4}
 .chat-input-row{display:flex;gap:6px;padding:8px;border-top:1px solid var(--border);flex-shrink:0}
-.chat-inp{flex:1;background:var(--input-bg);border:1px solid var(--border);border-radius:7px;
-  padding:7px 10px;font-family:'Exo 2',sans-serif;font-size:12px;color:var(--txt-1);outline:none;
-  transition:border-color .18s}
-.chat-inp:focus{border-color:var(--border-hi)}
-.chat-send{padding:7px 12px;border-radius:7px;border:none;background:var(--accent);color:#000;
-  font-weight:700;font-size:12px;cursor:pointer;transition:all .18s;flex-shrink:0}
-.chat-send:hover{filter:brightness(1.1)}
-
-/* ═══════════════════════════════════════════════════
-   BINARY OPTIONS VIEW
-═══════════════════════════════════════════════════ */
+.chat-inp{flex:1;background:var(--input-bg);border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-family:'Exo 2',sans-serif;font-size:12px;color:var(--txt-1);outline:none;transition:border-color .18s}.chat-inp:focus{border-color:var(--border-hi)}
+.chat-send{padding:7px 12px;border-radius:7px;border:none;background:var(--accent);color:#000;font-weight:700;font-size:12px;cursor:pointer;transition:all .18s;flex-shrink:0}.chat-send:hover{filter:brightness(1.1)}
 #view-bin{flex-direction:row}
 .bin-col-l{flex:1;display:flex;flex-direction:column;min-width:0;border-right:1px solid var(--border)}
 .bin-col-r{width:260px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;padding:10px;overflow-y:auto}
 .chart-top{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex-shrink:0}
-.asset-block{display:flex;flex-direction:column}
-.asset-sym{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;letter-spacing:1px;color:var(--txt-1)}
-.asset-full{font-size:10px;color:var(--txt-3);letter-spacing:1px;margin-top:-2px}
-.price-block{display:flex;align-items:baseline;gap:6px}
-.price-big{font-family:'Share Tech Mono',monospace;font-size:24px}
-.price-up{color:var(--green)}.price-dn{color:var(--red)}
-.change-tag{padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700}
-.ct-up{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,230,118,.2)}
-.ct-dn{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,23,68,.2)}
+.asset-block{display:flex;flex-direction:column}.asset-sym{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;letter-spacing:1px;color:var(--txt-1)}.asset-full{font-size:10px;color:var(--txt-3);letter-spacing:1px;margin-top:-2px}
+.price-block{display:flex;align-items:baseline;gap:6px}.price-big{font-family:'Share Tech Mono',monospace;font-size:24px}.price-up{color:var(--green)}.price-dn{color:var(--red)}
+.change-tag{padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700}.ct-up{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,230,118,.2)}.ct-dn{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,23,68,.2)}
 .tf-tabs{display:flex;gap:3px;margin-left:auto}
-.tf-tab{padding:3px 9px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.5px;
-  cursor:pointer;border:1px solid var(--border);color:var(--txt-3);transition:all .18s}
-.tf-tab.on{border-color:var(--border-hi);color:var(--accent);background:var(--accent-dim)}
-.chart-stage{flex:1;position:relative;min-height:200px}
-#candle-canvas{position:absolute;inset:0;width:100%;height:100%}
-.timer-card{background:var(--glass);border:1px solid var(--border);border-radius:10px;
-  padding:14px;display:flex;flex-direction:column;align-items:center;gap:8px}
-.timer-svg-wrap{position:relative;width:90px;height:90px}
-.timer-svg-wrap svg{width:90px;height:90px}
+.tf-tab{padding:3px 9px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.5px;cursor:pointer;border:1px solid var(--border);color:var(--txt-3);transition:all .18s}.tf-tab.on{border-color:var(--border-hi);color:var(--accent);background:var(--accent-dim)}
+.chart-stage{flex:1;position:relative;min-height:200px}#candle-canvas{position:absolute;inset:0;width:100%;height:100%}
+.timer-card{background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.timer-svg-wrap{position:relative;width:90px;height:90px}.timer-svg-wrap svg{width:90px;height:90px}
 .timer-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.timer-num{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:var(--accent);line-height:1}
-.timer-lbl{font-size:8px;font-weight:700;letter-spacing:1.5px;color:var(--txt-3);text-transform:uppercase}
+.timer-num{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:var(--accent);line-height:1}.timer-lbl{font-size:8px;font-weight:700;letter-spacing:1.5px;color:var(--txt-3);text-transform:uppercase}
 .dir-cards{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:2px}
-.dir-card{border-radius:8px;padding:12px 8px;text-align:center;cursor:pointer;
-  border:2px solid transparent;transition:all .2s;user-select:none}
-.dir-card-up{background:var(--green-dim);border-color:rgba(0,230,118,.2)}
-.dir-card-up:hover,.dir-card-up.sel{background:rgba(0,230,118,.2);border-color:var(--green);box-shadow:0 0 20px rgba(0,230,118,.2)}
-.dir-card-dn{background:var(--red-dim);border-color:rgba(255,23,68,.2)}
-.dir-card-dn:hover,.dir-card-dn.sel{background:rgba(255,23,68,.2);border-color:var(--red);box-shadow:0 0 20px rgba(255,23,68,.2)}
-.dir-pct{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800}
-.dc-up{color:var(--green)}.dc-dn{color:var(--red)}
+.dir-card{border-radius:8px;padding:12px 8px;text-align:center;cursor:pointer;border:2px solid transparent;transition:all .2s;user-select:none}
+.dir-card-up{background:var(--green-dim);border-color:rgba(0,230,118,.2)}.dir-card-up:hover,.dir-card-up.sel{background:rgba(0,230,118,.2);border-color:var(--green);box-shadow:0 0 20px rgba(0,230,118,.2)}
+.dir-card-dn{background:var(--red-dim);border-color:rgba(255,23,68,.2)}.dir-card-dn:hover,.dir-card-dn.sel{background:rgba(255,23,68,.2);border-color:var(--red);box-shadow:0 0 20px rgba(255,23,68,.2)}
+.dir-pct{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800}.dc-up{color:var(--green)}.dc-dn{color:var(--red)}
 .dir-label{font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--txt-3);margin-top:2px;text-transform:uppercase}
-.profit-preview{display:flex;justify-content:space-between;align-items:center;
-  padding:8px 10px;background:var(--green-dim);border:1px solid rgba(0,230,118,.15);border-radius:7px;margin:6px 0}
-.pp-lbl{font-size:9px;font-weight:700;letter-spacing:1px;color:var(--txt-3);text-transform:uppercase}
-.pp-val{font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--green)}
-
-/* ═══════════════════════════════════════════════════
-   DASHBOARD VIEW
-═══════════════════════════════════════════════════ */
+.profit-preview{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--green-dim);border:1px solid rgba(0,230,118,.15);border-radius:7px;margin:6px 0}
+.pp-lbl{font-size:9px;font-weight:700;letter-spacing:1px;color:var(--txt-3);text-transform:uppercase}.pp-val{font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--green)}
 #view-dash{flex-direction:column;overflow-y:auto;padding:14px;gap:12px}
 .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
-.stat-tile{background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:16px;transition:border-color .2s}
-.stat-tile:hover{border-color:rgba(255,255,255,.15)}
-.st-icon{font-size:22px;margin-bottom:6px}
-.st-lbl{font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--txt-3);text-transform:uppercase}
+.stat-tile{background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:16px;transition:border-color .2s}.stat-tile:hover{border-color:rgba(255,255,255,.15)}
+.st-icon{font-size:22px;margin-bottom:6px}.st-lbl{font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--txt-3);text-transform:uppercase}
 .st-val{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;margin-top:3px}
 .sv-g{color:var(--green)}.sv-r{color:var(--red)}.sv-a{color:var(--accent)}.sv-b{color:var(--blue)}
 .tx-card{background:var(--glass);border:1px solid var(--border);border-radius:10px;overflow:hidden}
 .tx-card-hd{padding:10px 14px;border-bottom:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;color:var(--txt-2);text-transform:uppercase}
-.tx-entry{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border)}
-.tx-entry:last-child{border-bottom:none}
+.tx-entry{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border)}.tx-entry:last-child{border-bottom:none}
 .tx-ico{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.tx-info{flex:1;min-width:0}
-.tx-type{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tx-time{font-size:10px;color:var(--txt-3)}
+.tx-info{flex:1;min-width:0}.tx-type{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tx-time{font-size:10px;color:var(--txt-3)}
 .tx-amount{font-family:'Share Tech Mono',monospace;font-size:13px;white-space:nowrap}
-
-/* ═══════════════════════════════════════════════════
-   DEPOSIT VIEW
-═══════════════════════════════════════════════════ */
+.tx-pending{font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(255,204,0,0.15);color:var(--accent);border:1px solid rgba(255,204,0,0.25);font-weight:700;letter-spacing:.5px;white-space:nowrap}
 #view-dep{align-items:center;justify-content:center;padding:20px;overflow-y:auto}
-.dep-card{background:var(--glass2);border:1px solid var(--border);border-radius:14px;
-  width:100%;max-width:420px;padding:24px;box-shadow:var(--shadow)}
+.dep-card{background:var(--glass2);border:1px solid var(--border);border-radius:14px;width:100%;max-width:420px;padding:24px;box-shadow:var(--shadow)}
 .dep-logo-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:20px}
-.payhero-badge{padding:5px 14px;background:rgba(255,204,0,.1);border:1px solid rgba(255,204,0,.3);
-  border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;color:var(--accent)}
-.mpesa-badge-sm{padding:5px 12px;background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.3);
-  border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;color:var(--green)}
+.payhero-badge{padding:5px 14px;background:rgba(255,204,0,.1);border:1px solid rgba(255,204,0,.3);border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;color:var(--accent)}
+.mpesa-badge-sm{padding:5px 12px;background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.3);border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;color:var(--green)}
 .dep-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;letter-spacing:1px;text-align:center;color:var(--txt-1);margin-bottom:4px}
 .dep-sub{font-size:12px;color:var(--txt-2);text-align:center;margin-bottom:20px;line-height:1.5}
-.dep-field{margin-bottom:12px}
-.dep-field label{display:block;font-size:9px;font-weight:700;letter-spacing:1.2px;color:var(--txt-3);margin-bottom:4px;text-transform:uppercase}
-.dep-inp{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:8px;
-  padding:10px 13px;font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--txt-1);
-  outline:none;transition:border-color .18s}
-.dep-inp:focus{border-color:var(--border-hi)}
+.dep-field{margin-bottom:12px}.dep-field label{display:block;font-size:9px;font-weight:700;letter-spacing:1.2px;color:var(--txt-3);margin-bottom:4px;text-transform:uppercase}
+.dep-inp{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:8px;padding:10px 13px;font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--txt-1);outline:none;transition:border-color .18s}.dep-inp:focus{border-color:var(--border-hi)}
 .amt-presets{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:6px}
-.amt-preset{padding:7px;border-radius:6px;border:1px solid var(--border);background:var(--glass);
-  color:var(--txt-2);font-size:11px;font-weight:700;cursor:pointer;text-align:center;transition:all .18s}
-.amt-preset:hover{border-color:var(--border-hi);color:var(--accent)}
-.dep-info-box{background:var(--blue-dim);border:1px solid rgba(41,121,255,.2);border-radius:7px;
-  padding:10px 12px;font-size:11px;color:var(--txt-2);line-height:1.6;margin-bottom:14px}
-.dep-info-box strong{color:var(--blue)}
-.payhero-btn{width:100%;padding:13px;border-radius:9px;border:none;cursor:pointer;
-  background:var(--accent);color:#000;font-family:'Barlow Condensed',sans-serif;
-  font-size:16px;font-weight:800;letter-spacing:1.5px;transition:all .2s;text-transform:uppercase;
-  box-shadow:0 4px 20px rgba(255,204,0,.3)}
-.payhero-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,204,0,.45)}
-.payhero-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.amt-preset{padding:7px;border-radius:6px;border:1px solid var(--border);background:var(--glass);color:var(--txt-2);font-size:11px;font-weight:700;cursor:pointer;text-align:center;transition:all .18s}.amt-preset:hover{border-color:var(--border-hi);color:var(--accent)}
+.dep-info-box{background:var(--blue-dim);border:1px solid rgba(41,121,255,.2);border-radius:7px;padding:10px 12px;font-size:11px;color:var(--txt-2);line-height:1.6;margin-bottom:14px}.dep-info-box strong{color:var(--blue)}
+.payhero-btn{width:100%;padding:13px;border-radius:9px;border:none;cursor:pointer;background:var(--accent);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:1.5px;transition:all .2s;text-transform:uppercase;box-shadow:0 4px 20px rgba(255,204,0,.3)}
+.payhero-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,204,0,.45)}.payhero-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .dep-steps{margin-top:16px;display:flex;flex-direction:column;gap:6px}
 .dep-step{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--txt-2)}
-.step-num{width:18px;height:18px;border-radius:50%;background:var(--accent-dim);border:1px solid var(--border-hi);
-  display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--accent);flex-shrink:0}
-
-/* ═══════════════════════════════════════════════════
-   AUTH MODAL
-═══════════════════════════════════════════════════ */
-.modal-overlay{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;
-  background:rgba(4,8,16,0.88);backdrop-filter:blur(16px)}
-.modal-overlay.show{display:flex}
-.modal-box{background:var(--overlay);border:1px solid var(--border);border-radius:14px;
-  width:100%;max-width:380px;margin:16px;position:relative;
-  box-shadow:var(--shadow),0 0 60px rgba(255,204,0,.06);
-  animation:popIn .28s cubic-bezier(.34,1.56,.64,1)}
+.step-num{width:18px;height:18px;border-radius:50%;background:var(--accent-dim);border:1px solid var(--border-hi);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--accent);flex-shrink:0}
+.modal-overlay{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;background:rgba(4,8,16,0.88);backdrop-filter:blur(16px)}.modal-overlay.show{display:flex}
+.modal-box{background:var(--overlay);border:1px solid var(--border);border-radius:14px;width:100%;max-width:380px;margin:16px;position:relative;box-shadow:var(--shadow),0 0 60px rgba(255,204,0,.06);animation:popIn .28s cubic-bezier(.34,1.56,.64,1)}
 @keyframes popIn{from{transform:scale(.88) translateY(20px);opacity:0}to{transform:none;opacity:1}}
 .modal-accent-bar{height:3px;background:linear-gradient(90deg,var(--accent),var(--orange));border-radius:14px 14px 0 0}
 .modal-inner{padding:24px}
-.modal-logo{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;letter-spacing:2px;
-  text-align:center;margin-bottom:2px}
-.modal-logo span{color:var(--accent)}
+.modal-logo{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;letter-spacing:2px;text-align:center;margin-bottom:2px}.modal-logo span{color:var(--accent)}
 .modal-sub{font-size:11px;color:var(--txt-2);text-align:center;letter-spacing:1px;margin-bottom:20px}
-.modal-close{position:absolute;top:14px;right:14px;width:26px;height:26px;border-radius:6px;
-  display:flex;align-items:center;justify-content:center;cursor:pointer;
-  color:var(--txt-2);font-size:15px;transition:all .18s;border:1px solid var(--border)}
-.modal-close:hover{color:var(--txt-1);background:var(--glass)}
+.modal-close{position:absolute;top:14px;right:14px;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--txt-2);font-size:15px;transition:all .18s;border:1px solid var(--border)}.modal-close:hover{color:var(--txt-1);background:var(--glass)}
 .auth-seg{display:flex;background:var(--glass);border-radius:8px;padding:3px;gap:2px;margin-bottom:18px}
-.auth-seg-btn{flex:1;padding:7px;border-radius:6px;text-align:center;font-size:12px;font-weight:700;
-  letter-spacing:.5px;cursor:pointer;transition:all .18s;color:var(--txt-2)}
-.auth-seg-btn.on{background:var(--accent);color:#000}
-.auth-field{margin-bottom:12px}
-.auth-field label{display:block;font-size:9px;font-weight:700;letter-spacing:1.2px;color:var(--txt-3);margin-bottom:4px;text-transform:uppercase}
-.auth-inp{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:8px;
-  padding:10px 12px;font-family:'Exo 2',sans-serif;font-size:14px;color:var(--txt-1);
-  outline:none;transition:border-color .18s}
-.auth-inp:focus{border-color:var(--border-hi)}
-.age-check{display:flex;align-items:flex-start;gap:10px;padding:10px;
-  background:rgba(255,204,0,.05);border:1px solid rgba(255,204,0,.15);border-radius:8px;margin:12px 0;cursor:pointer}
-.toggle-pill{width:34px;height:19px;border-radius:10px;background:var(--border);position:relative;
-  flex-shrink:0;transition:background .2s;margin-top:1px}
-.toggle-pill.on{background:var(--green)}
-.toggle-knob{width:15px;height:15px;border-radius:50%;background:#fff;position:absolute;
-  top:2px;left:2px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.4)}
-.toggle-pill.on .toggle-knob{transform:translateX(15px)}
-.age-text{font-size:11px;color:var(--txt-2);line-height:1.5}
-.age-text b{color:var(--accent)}
-.submit-btn{width:100%;padding:12px;border-radius:9px;border:none;cursor:pointer;
-  background:var(--accent);color:#000;font-family:'Barlow Condensed',sans-serif;
-  font-size:16px;font-weight:800;letter-spacing:1.5px;transition:all .2s;text-transform:uppercase;
-  margin-top:4px;box-shadow:0 4px 20px rgba(255,204,0,.25)}
-.submit-btn:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(255,204,0,.4)}
-.gate-overlay{position:absolute;inset:0;z-index:10;border-radius:10px;
-  background:rgba(7,14,28,.9);backdrop-filter:blur(6px);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
-.gate-icon{font-size:30px}
-.gate-text{font-size:13px;color:var(--txt-2);font-weight:700}
-
-/* ═══════════════════════════════════════════════════
-   PROVABLY FAIR MODAL
-═══════════════════════════════════════════════════ */
+.auth-seg-btn{flex:1;padding:7px;border-radius:6px;text-align:center;font-size:12px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:all .18s;color:var(--txt-2)}.auth-seg-btn.on{background:var(--accent);color:#000}
+.auth-field{margin-bottom:12px}.auth-field label{display:block;font-size:9px;font-weight:700;letter-spacing:1.2px;color:var(--txt-3);margin-bottom:4px;text-transform:uppercase}
+.auth-inp{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Exo 2',sans-serif;font-size:14px;color:var(--txt-1);outline:none;transition:border-color .18s}.auth-inp:focus{border-color:var(--border-hi)}
+.age-check{display:flex;align-items:flex-start;gap:10px;padding:10px;background:rgba(255,204,0,.05);border:1px solid rgba(255,204,0,.15);border-radius:8px;margin:12px 0;cursor:pointer}
+.toggle-pill{width:34px;height:19px;border-radius:10px;background:var(--border);position:relative;flex-shrink:0;transition:background .2s;margin-top:1px}.toggle-pill.on{background:var(--green)}
+.toggle-knob{width:15px;height:15px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.4)}.toggle-pill.on .toggle-knob{transform:translateX(15px)}
+.age-text{font-size:11px;color:var(--txt-2);line-height:1.5}.age-text b{color:var(--accent)}
+.submit-btn{width:100%;padding:12px;border-radius:9px;border:none;cursor:pointer;background:var(--accent);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:1.5px;transition:all .2s;text-transform:uppercase;margin-top:4px;box-shadow:0 4px 20px rgba(255,204,0,.25)}
+.submit-btn:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(255,204,0,.4)}.submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
+.auth-error{font-size:11px;color:var(--red);text-align:center;margin-top:8px;display:none}
+.gate-overlay{position:absolute;inset:0;z-index:10;border-radius:10px;background:rgba(7,14,28,.9);backdrop-filter:blur(6px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.gate-icon{font-size:30px}.gate-text{font-size:13px;color:var(--txt-2);font-weight:700}
 #pf-modal .modal-box{max-width:460px}
 .pf-step-row{display:flex;gap:12px;margin-bottom:14px}
-.pf-step-num{width:22px;height:22px;border-radius:50%;background:var(--accent-dim);border:1px solid var(--border-hi);
-  display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--accent);flex-shrink:0;margin-top:1px}
-.pf-step-content{}
+.pf-step-num{width:22px;height:22px;border-radius:50%;background:var(--accent-dim);border:1px solid var(--border-hi);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--accent);flex-shrink:0;margin-top:1px}
 .pf-step-title{font-size:13px;font-weight:700;color:var(--txt-1);margin-bottom:3px}
 .pf-step-desc{font-size:11px;color:var(--txt-2);line-height:1.6}
-.pf-hash-display{background:var(--input-bg);border:1px solid var(--border);border-radius:6px;
-  padding:8px 10px;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--blue);
-  word-break:break-all;margin-top:6px;cursor:pointer;transition:border-color .18s;line-height:1.6}
-.pf-hash-display:hover{border-color:var(--border-hi);color:var(--accent)}
-.formula-box{background:var(--accent-dim);border:1px solid rgba(255,204,0,.2);border-radius:6px;
-  padding:8px 10px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--accent);margin-top:6px}
-
-/* ═══════════════════════════════════════════════════
-   TOAST
-═══════════════════════════════════════════════════ */
+.pf-hash-display{background:var(--input-bg);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--blue);word-break:break-all;margin-top:6px;cursor:pointer;transition:border-color .18s;line-height:1.6}.pf-hash-display:hover{border-color:var(--border-hi);color:var(--accent)}
+.formula-box{background:var(--accent-dim);border:1px solid rgba(255,204,0,.2);border-radius:6px;padding:8px 10px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--accent);margin-top:6px}
 #toaster{position:fixed;bottom:18px;right:18px;z-index:2000;display:flex;flex-direction:column;gap:6px;pointer-events:none}
-.toast{padding:10px 16px;border-radius:9px;backdrop-filter:blur(20px);font-size:12px;font-weight:700;
-  animation:toastIn .28s ease;max-width:280px;pointer-events:auto;border:1px solid}
+.toast{padding:10px 16px;border-radius:9px;backdrop-filter:blur(20px);font-size:12px;font-weight:700;animation:toastIn .28s ease;max-width:320px;pointer-events:auto;border:1px solid}
 .toast.win{background:rgba(0,230,118,.14);border-color:rgba(0,230,118,.3);color:var(--green)}
 .toast.loss{background:rgba(255,23,68,.14);border-color:rgba(255,23,68,.3);color:var(--red)}
 .toast.info{background:rgba(41,121,255,.12);border-color:rgba(41,121,255,.25);color:var(--blue)}
 .toast.alert{background:rgba(255,204,0,.12);border-color:rgba(255,204,0,.25);color:var(--accent)}
 @keyframes toastIn{from{transform:translateX(110%);opacity:0}to{transform:none;opacity:1}}
-
-/* ═══════════════════════════════════════════════════
-   MOBILE BOTTOM NAV
-═══════════════════════════════════════════════════ */
-#mobile-nav{display:none;height:54px;background:var(--glass2);border-top:1px solid var(--border);
-  flex-shrink:0;position:relative;z-index:200}
+#mobile-nav{display:none;height:54px;background:var(--glass2);border-top:1px solid var(--border);flex-shrink:0;position:relative;z-index:200}
 .mob-nav-row{display:flex;height:100%}
-.mob-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
-  cursor:pointer;border:none;background:transparent;color:var(--txt-3);transition:all .18s;font-family:'Exo 2',sans-serif}
-.mob-btn.on{color:var(--accent)}
-.mob-btn-icon{font-size:18px}
-.mob-btn-lbl{font-size:8px;font-weight:700;letter-spacing:.8px;text-transform:uppercase}
-
-/* ═══════════════════════════════════════════════════
-   RESPONSIVE
-═══════════════════════════════════════════════════ */
+.mob-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;border:none;background:transparent;color:var(--txt-3);transition:all .18s;font-family:'Exo 2',sans-serif}
+.mob-btn.on{color:var(--accent)}.mob-btn-icon{font-size:18px}.mob-btn-lbl{font-size:8px;font-weight:700;letter-spacing:.8px;text-transform:uppercase}
 @media(max-width:1100px){.av-col-l,.av-col-r{width:200px}}
-@media(max-width:900px){
-  .av-col-l{display:none}
-  .av-col-r{width:220px}
-  .bin-col-r{width:230px}
-}
-@media(max-width:680px){
-  #sidebar{display:none}
-  .top-nav{display:none}
-  #mobile-nav{display:flex}
-  #view-av{flex-direction:column}
-  .av-col-r{width:100%;border-left:none;border-top:1px solid var(--border);max-height:320px;overflow-y:auto}
-  .av-col-c{min-height:260px}
-  #view-bin{flex-direction:column}
-  .bin-col-r{width:100%;border-left:none;border-top:1px solid var(--border)}
-  .chart-stage{min-height:200px}
-  .dep-card{padding:18px}
-  .demo-banner{flex-wrap:wrap;gap:6px;padding:6px 10px}
-  .demo-banner-text{display:none}
-}
-@media(max-width:420px){
-  #topbar{padding:0 10px;gap:6px}
-  .logo-text{font-size:17px}
-  .auth-btn{padding:5px 10px;font-size:11px}
-  .bal-wrap{padding:4px 8px}
-}
+@media(max-width:900px){.av-col-l{display:none}.av-col-r{width:220px}.bin-col-r{width:230px}}
+@media(max-width:680px){#sidebar{display:none}.top-nav{display:none}#mobile-nav{display:flex}#view-av{flex-direction:column}.av-col-r{width:100%;border-left:none;border-top:1px solid var(--border);max-height:320px;overflow-y:auto}.av-col-c{min-height:260px}#view-bin{flex-direction:column}.bin-col-r{width:100%;border-left:none;border-top:1px solid var(--border)}.chart-stage{min-height:200px}.dep-card{padding:18px}.demo-banner{flex-wrap:wrap;gap:6px;padding:6px 10px}.demo-banner-text{display:none}}
+@media(max-width:420px){#topbar{padding:0 10px;gap:6px}.logo-text{font-size:17px}.auth-btn{padding:5px 10px;font-size:11px}.bal-wrap{padding:4px 8px}}
 </style>
 </head>
 <body>
-
 <div id="app">
-<!-- ═══════════════ TOP BAR ═══════════════ -->
 <header id="topbar">
-  <a class="logo-mark" href="#">
-    <div class="logo-icon">✈</div>
-    <div class="logo-text">KAN<span>DEGE</span></div>
-  </a>
+  <a class="logo-mark" href="#"><div class="logo-icon">✈</div><div class="logo-text">KAN<span>DEGE</span></div></a>
   <div class="top-divider"></div>
   <nav class="top-nav">
     <div class="tnav on" onclick="showView('av',this)"><div class="tnav-dot"></div>AVIATOR</div>
     <div class="tnav" onclick="showView('bin',this)">BINARY OPTIONS</div>
-    <!-- ★ These nav items require login — hidden for guests -->
     <div class="tnav" data-auth onclick="showView('dash',this)">DASHBOARD</div>
     <div class="tnav" data-auth onclick="showView('dep',this)">DEPOSIT</div>
   </nav>
   <div class="top-right">
-    <!-- ★ DEMO BADGE — shown only when NOT logged in -->
-    <div class="demo-badge" id="demoBadge">
-      <div class="demo-badge-dot"></div>
-      DEMO
-    </div>
+    <div class="demo-badge" id="demoBadge"><div class="demo-badge-dot"></div>DEMO</div>
     <div class="bal-wrap" id="balWrap" style="display:none" onclick="showView('dep')">
-      <div>
-        <div class="bal-kes">BALANCE</div>
-        <div class="bal-num" id="balNum">KES 0</div>
-      </div>
+      <div><div class="bal-kes">BALANCE</div><div class="bal-num" id="balNum">KES 0</div></div>
       <div class="bal-plus" title="Deposit">+</div>
     </div>
     <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙</button>
@@ -602,437 +249,173 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
     </div>
   </div>
 </header>
-
-<!-- ═══════════════ MAIN ═══════════════ -->
 <div id="main-wrap">
-  <!-- Sidebar -->
-  <nav id="sidebar">
-    <div class="sbi on" onclick="showView('av')" title="Aviator">✈</div>
-    <div class="sbi" onclick="showView('bin')" title="Binary Options">📊</div>
-    <!-- ★ These sidebar items require login -->
-    <div class="sbi" data-auth onclick="showView('dash')" title="Dashboard">◈</div>
-    <div class="sbi" data-auth onclick="showView('dep')" title="Deposit">💳</div>
-    <div class="sbi-spacer"></div>
-    <div class="sbi" onclick="openModal('pf-modal')" title="Provably Fair">🔐</div>
-    <div class="sbi" id="sidebar-acct" onclick="handleAcctClick()" title="Account">👤</div>
-  </nav>
-
-  <!-- Viewport -->
-  <div id="viewport">
-
-    <!-- ══════════════ AVIATOR VIEW ══════════════ -->
-    <div id="view-av" class="view on">
-      <!-- ★ Demo banner — floats over the game, hidden when logged in -->
-      <div class="demo-banner" id="demoBannerAv">
-        <div class="demo-banner-tag">DEMO MODE</div>
-        <div class="demo-banner-text">You are viewing a live preview. Sign in to deposit and play for real.</div>
-        <button class="demo-banner-btn" onclick="openModal('auth-modal','register')">CREATE ACCOUNT</button>
-      </div>
-
-      <!-- LEFT: Bet Panel A -->
-      <div class="av-col-l" id="avLeftCol">
-        <div class="panel" style="position:relative">
-          <div class="panel-hd"><div class="panel-title">Bet · Panel 1</div></div>
-          <div class="panel-body">
-            <div class="bet-tabs">
-              <div class="bt on" onclick="setBetMode(this,'manual')">MANUAL</div>
-              <div class="bt" onclick="setBetMode(this,'auto')">AUTO</div>
-            </div>
-            <div class="inp-group">
-              <span class="inp-label">Bet Amount</span>
-              <div class="inp-row">
-                <span class="inp-pfx">KES</span>
-                <input class="inp-field" id="av-amt1" type="number" value="100" min="10" oninput="recalcPot(1)"/>
-              </div>
-              <div class="q-row">
-                <div class="q-btn" onclick="setv('av-amt1',50,1)">50</div>
-                <div class="q-btn" onclick="setv('av-amt1',100,1)">100</div>
-                <div class="q-btn" onclick="setv('av-amt1',500,1)">500</div>
-                <div class="q-btn" onclick="setv('av-amt1',1000,1)">1K</div>
-              </div>
-            </div>
-            <div class="auto-cashout-row">
-              <span class="ac-label">Auto cashout ×</span>
-              <input class="ac-inp" id="av-co1" type="number" value="2.00" step="0.1" min="1.1" oninput="recalcPot(1)"/>
-            </div>
-            <div class="pot-box">
-              <span class="pot-lbl">Potential win</span>
-              <span class="pot-val" id="av-pot1">KES 200.00</span>
-            </div>
-            <button class="action-btn btn-place" id="av-bet1-btn" onclick="placeBet(1)">PLACE BET</button>
-            <button class="action-btn btn-cashout" id="av-cash1-btn" onclick="cashOut(1)" style="display:none">💰 CASH OUT NOW</button>
-          </div>
-          <div class="gate-overlay" id="gate1" style="display:none">
-            <div class="gate-icon">🔒</div>
-            <div class="gate-text">Sign in to bet</div>
-            <button class="action-btn btn-generic" style="width:auto;padding:8px 20px;margin-top:4px" onclick="openModal('auth-modal')">SIGN IN</button>
-          </div>
-        </div>
-        <div class="pf-strip">
-          <div class="pf-strip-hd">
-            <span class="pf-strip-title">Provably Fair</span>
-            <span class="verified-badge">✓ VERIFIED</span>
-          </div>
-          <div class="pf-line"><div class="pf-key">Server Seed Hash</div><div class="pf-val" id="pf-hash-short" onclick="openModal('pf-modal')">—</div></div>
-          <div class="pf-line"><div class="pf-key">Client Seed</div><div class="pf-val" id="pf-client-short">—</div></div>
-          <div class="pf-line"><div class="pf-key">Nonce</div><div class="pf-val" id="pf-nonce">—</div></div>
-          <button class="pf-verify-btn" onclick="openModal('pf-modal')">🔍 VERIFY THIS ROUND</button>
-        </div>
-      </div>
-
-      <!-- CENTER: Flight Arena -->
-      <div class="av-col-c">
-        <div class="arena-wrap">
-          <div class="arena-header">
-            <div class="live-badge"><div class="live-dot-sm"></div><span class="live-txt">LIVE</span></div>
-            <span class="round-id" id="round-id-lbl">Round #—</span>
-            <div class="history-pills" id="hist-pills"></div>
-          </div>
-          <div class="flight-stage" id="flight-stage">
-            <svg id="av-svg" viewBox="0 0 700 340" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="curveGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="rgba(255,204,0,0.3)" id="grad-top"/>
-                  <stop offset="100%" stop-color="rgba(255,204,0,0)"/>
-                </linearGradient>
-                <filter id="glow-f"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                <linearGradient id="crashGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="rgba(255,23,68,0.3)"/>
-                  <stop offset="100%" stop-color="rgba(255,23,68,0)"/>
-                </linearGradient>
-              </defs>
-              <line x1="0" y1="85" x2="700" y2="85" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-              <line x1="0" y1="170" x2="700" y2="170" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-              <line x1="0" y1="255" x2="700" y2="255" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-              <line x1="175" y1="0" x2="175" y2="340" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-              <line x1="350" y1="0" x2="350" y2="340" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-              <line x1="525" y1="0" x2="525" y2="340" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-              <path id="c-area" d="" fill="url(#curveGrad)" opacity=".6"/>
-              <path id="c-line" d="" fill="none" stroke="var(--accent)" stroke-width="2.5" filter="url(#glow-f)"/>
-            </svg>
-            <svg id="av-plane" width="52" height="52" viewBox="0 0 52 52"
-              style="position:absolute;left:14px;bottom:14px;filter:drop-shadow(0 0 8px var(--accent))">
-              <g id="plane-g">
-                <polygon points="4,26 46,16 40,26 46,36" fill="var(--accent)"/>
-                <polygon points="18,26 30,20 34,26 30,32" fill="rgba(255,204,0,0.3)"/>
-                <polygon points="4,26 15,23 13,29" fill="rgba(255,255,255,0.8)"/>
-                <circle cx="4" cy="26" r="3" fill="var(--orange)" opacity=".7">
-                  <animate attributeName="r" values="3;1.5;3" dur=".5s" repeatCount="indefinite"/>
-                  <animate attributeName="opacity" values=".7;.2;.7" dur=".5s" repeatCount="indefinite"/>
-                </circle>
-              </g>
-            </svg>
-            <div class="mult-display" id="mult-display">
-              <div class="mult-big state-wait" id="mult-num">WAITING</div>
-              <div class="mult-sub" id="mult-sub">STARTING IN 5s</div>
-            </div>
-          </div>
-          <div class="arena-footer" id="arena-ticker">
-            <div class="ticker-item">
-              <span style="font-size:9px;color:var(--txt-3);text-transform:uppercase;letter-spacing:1px;font-weight:700">Live bets:</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- RIGHT: Bet Panel B + Chat -->
-      <div class="av-col-r">
-        <div class="panel" style="position:relative">
-          <div class="panel-hd"><div class="panel-title">Bet · Panel 2</div></div>
-          <div class="panel-body">
-            <div class="inp-group">
-              <span class="inp-label">Bet Amount</span>
-              <div class="inp-row">
-                <span class="inp-pfx">KES</span>
-                <input class="inp-field" id="av-amt2" type="number" value="200" min="10" oninput="recalcPot(2)"/>
-              </div>
-              <div class="q-row">
-                <div class="q-btn" onclick="setv('av-amt2',100,2)">100</div>
-                <div class="q-btn" onclick="setv('av-amt2',250,2)">250</div>
-                <div class="q-btn" onclick="setv('av-amt2',500,2)">500</div>
-                <div class="q-btn" onclick="setv('av-amt2',2000,2)">2K</div>
-              </div>
-            </div>
-            <div class="auto-cashout-row">
-              <span class="ac-label">Auto cashout ×</span>
-              <input class="ac-inp" id="av-co2" type="number" value="3.00" step="0.1" min="1.1" oninput="recalcPot(2)"/>
-            </div>
-            <div class="pot-box">
-              <span class="pot-lbl">Potential win</span>
-              <span class="pot-val" id="av-pot2">KES 600.00</span>
-            </div>
-            <button class="action-btn btn-place" id="av-bet2-btn" onclick="placeBet(2)">PLACE BET</button>
-            <button class="action-btn btn-cashout" id="av-cash2-btn" onclick="cashOut(2)" style="display:none">💰 CASH OUT</button>
-          </div>
-          <div class="gate-overlay" id="gate2" style="display:none">
-            <div class="gate-icon">🔒</div>
-            <div class="gate-text">Sign in to bet</div>
-            <button class="action-btn btn-generic" style="width:auto;padding:8px 20px;margin-top:4px" onclick="openModal('auth-modal')">SIGN IN</button>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="panel-hd"><div class="panel-title">Active Bets</div></div>
-          <div class="panel-body" style="padding:8px">
-            <div class="bets-scroll" id="bets-list"><div class="empty-state">No active bets this round</div></div>
-          </div>
-        </div>
-        <div class="panel" style="flex:1;display:flex;flex-direction:column;min-height:180px">
-          <div class="panel-hd"><div class="panel-title">Live Chat</div></div>
-          <div class="chat-wrap">
-            <div class="chat-msgs" id="chat-msgs"></div>
-            <div class="chat-input-row">
-              <input class="chat-inp" id="chat-inp" type="text" placeholder="Say something..." maxlength="80"/>
-              <button class="chat-send" onclick="sendChat()">SEND</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══════════════ BINARY VIEW ══════════════ -->
-    <div id="view-bin" class="view">
-      <!-- ★ Demo banner for binary too -->
-      <div class="demo-banner" id="demoBannerBin">
-        <div class="demo-banner-tag">DEMO MODE</div>
-        <div class="demo-banner-text">Live chart preview. Sign in to trade with real money.</div>
-        <button class="demo-banner-btn" onclick="openModal('auth-modal','register')">CREATE ACCOUNT</button>
-      </div>
-
-      <div class="bin-col-l">
-        <div class="chart-top">
-          <div class="asset-block">
-            <div class="asset-sym">BTC/KES</div>
-            <div class="asset-full">BITCOIN / KENYAN SHILLING</div>
-          </div>
-          <div class="price-block">
-            <div class="price-big price-up" id="btc-price">8,432,150</div>
-            <div class="change-tag ct-up" id="btc-chg">+2.34%</div>
-          </div>
-          <div class="tf-tabs" id="tf-tabs">
-            <div class="tf-tab on" onclick="setTF(this,'1M')">1M</div>
-            <div class="tf-tab" onclick="setTF(this,'5M')">5M</div>
-            <div class="tf-tab" onclick="setTF(this,'15M')">15M</div>
-            <div class="tf-tab" onclick="setTF(this,'1H')">1H</div>
-          </div>
-        </div>
-        <div class="chart-stage">
-          <canvas id="candle-canvas"></canvas>
-        </div>
-      </div>
-
-      <div class="bin-col-r">
-        <div class="timer-card">
-          <div class="timer-svg-wrap">
-            <svg viewBox="0 0 90 90">
-              <circle cx="45" cy="45" r="38" fill="none" stroke="var(--border)" stroke-width="6"/>
-              <circle id="timer-ring" cx="45" cy="45" r="38" fill="none"
-                stroke="var(--accent)" stroke-width="6" stroke-linecap="round"
-                stroke-dasharray="239" stroke-dashoffset="0"
-                transform="rotate(-90 45 45)" style="transition:stroke-dashoffset .85s,stroke .3s"/>
-            </svg>
-            <div class="timer-center">
-              <div class="timer-num" id="bin-timer-num">60</div>
-              <div class="timer-lbl">SECONDS</div>
-            </div>
-          </div>
-          <div style="font-size:10px;color:var(--txt-3);font-weight:700;letter-spacing:1px">TIME TO CLOSE</div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-hd"><div class="panel-title">Predict Direction</div></div>
-          <div class="panel-body" style="padding:10px">
-            <div class="dir-cards">
-              <div class="dir-card dir-card-up sel" id="dc-up" onclick="pickDir('up')">
-                <div class="dir-pct dc-up">▲ 92%</div>
-                <div class="dir-label">CALL / UP</div>
-              </div>
-              <div class="dir-card dir-card-dn" id="dc-dn" onclick="pickDir('dn')">
-                <div class="dir-pct dc-dn">▼ 85%</div>
-                <div class="dir-label">PUT / DOWN</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel" style="position:relative">
-          <div class="panel-hd"><div class="panel-title">Invest</div></div>
-          <div class="panel-body">
-            <div class="inp-row">
-              <span class="inp-pfx">KES</span>
-              <input class="inp-field" id="bin-amt" type="number" value="200" min="50" oninput="recalcBinProfit()"/>
-            </div>
-            <div class="q-row" style="margin-top:6px">
-              <div class="q-btn" onclick="setbinamt(100)">100</div>
-              <div class="q-btn" onclick="setbinamt(200)">200</div>
-              <div class="q-btn" onclick="setbinamt(500)">500</div>
-              <div class="q-btn" onclick="setbinamt(1000)">1K</div>
-            </div>
-            <div class="profit-preview">
-              <span class="pp-lbl">Profit if WIN</span>
-              <span class="pp-val" id="bin-profit">+KES 184.00</span>
-            </div>
-            <button class="action-btn btn-up" id="bin-exec-btn" onclick="execBinary()">▲ EXECUTE UP</button>
-          </div>
-          <div class="gate-overlay" id="gate-bin" style="display:none">
-            <div class="gate-icon">🔒</div>
-            <div class="gate-text">Sign in to trade</div>
-            <button class="action-btn btn-generic" style="width:auto;padding:8px 20px;margin-top:4px" onclick="openModal('auth-modal')">SIGN IN</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══════════════ DASHBOARD VIEW ══════════════ -->
-    <div id="view-dash" class="view" style="flex-direction:column;overflow-y:auto;padding:14px;gap:12px">
-      <div class="stats-row">
-        <div class="stat-tile"><div class="st-icon">💰</div><div class="st-lbl">Balance</div><div class="st-val sv-a" id="dash-bal">—</div></div>
-        <div class="stat-tile"><div class="st-icon">📈</div><div class="st-lbl">Today P&L</div><div class="st-val sv-g" id="dash-pnl">KES 0</div></div>
-        <div class="stat-tile"><div class="st-icon">🎯</div><div class="st-lbl">Win Rate</div><div class="st-val sv-b" id="dash-wr">—%</div></div>
-        <div class="stat-tile"><div class="st-icon">✈</div><div class="st-lbl">AV Rounds</div><div class="st-val sv-a" id="dash-ar">0</div></div>
-        <div class="stat-tile"><div class="st-icon">⚡</div><div class="st-lbl">Best Mult</div><div class="st-val sv-g" id="dash-bm">—x</div></div>
-        <div class="stat-tile"><div class="st-icon">🔥</div><div class="st-lbl">Win Streak</div><div class="st-val sv-a" id="dash-ws">0</div></div>
-      </div>
-      <div class="tx-card">
-        <div class="tx-card-hd">Recent Transactions</div>
-        <div id="tx-list"><div style="padding:20px;text-align:center;font-size:12px;color:var(--txt-3)">No transactions yet</div></div>
-      </div>
-    </div>
-
-    <!-- ══════════════ DEPOSIT VIEW ══════════════ -->
-    <div id="view-dep" class="view" style="align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px">
-      <div class="dep-card">
-        <div class="dep-logo-row">
-          <div class="payhero-badge">⚡Instant📲</div>
-          <div style="font-size:12px;color:var(--txt-3)">×</div>
-          <div class="mpesa-badge-sm">M-PESA</div>
-        </div>
-        <div class="dep-title">Add Funds</div>
-        <div class="dep-sub">Instant M-Pesa deposit.<br/>Funds reflect in seconds.</div>
-        <div class="dep-field">
-          <label>Phone Number</label>
-          <input class="dep-inp" id="dep-phone" type="tel" placeholder="e.g. 0712 345 678"/>
-        </div>
-        <div class="dep-field">
-          <label>Amount (KES)</label>
-          <input class="dep-inp" id="dep-amount" type="number" value="500" min="10"/>
-          <div class="amt-presets">
-            <div class="amt-preset" onclick="document.getElementById('dep-amount').value=100">100</div>
-            <div class="amt-preset" onclick="document.getElementById('dep-amount').value=500">500</div>
-            <div class="amt-preset" onclick="document.getElementById('dep-amount').value=1000">1,000</div>
-            <div class="amt-preset" onclick="document.getElementById('dep-amount').value=2000">2,000</div>
-          </div>
-        </div>
-        <div class="dep-info-box">
-          <strong>How it works:</strong> Enter your Safaricom number. We'll send an STK Push. Enter your M-Pesa PIN on your phone. Funds are credited instantly.
-        </div>
-        <button class="payhero-btn" id="dep-btn" onclick="initiateDeposit()">📱 SEND M-PESA PROMPT</button>
-        <div class="dep-steps">
-          <div class="dep-step"><div class="step-num">1</div>Enter phone &amp; amount, click the button above</div>
-          <div class="dep-step"><div class="step-num">2</div>A prompt appears on your phone — enter PIN</div>
-          <div class="dep-step"><div class="step-num">3</div>Funds credited to your KANDEGE balance instantly</div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /viewport -->
-</div><!-- /main-wrap -->
-
-<!-- Mobile nav -->
-<nav id="mobile-nav">
-  <div class="mob-nav-row">
-    <button class="mob-btn on" onclick="showView('av',this)" id="mob-av"><div class="mob-btn-icon">✈</div><div class="mob-btn-lbl">Aviator</div></button>
-    <button class="mob-btn" onclick="showView('bin',this)" id="mob-bin"><div class="mob-btn-icon">📊</div><div class="mob-btn-lbl">Binary</div></button>
-    <!-- ★ These mobile nav items require login -->
-    <button class="mob-btn" data-auth onclick="showView('dash',this)" id="mob-dash"><div class="mob-btn-icon">◈</div><div class="mob-btn-lbl">Account</div></button>
-    <button class="mob-btn" data-auth onclick="showView('dep',this)" id="mob-dep"><div class="mob-btn-icon">💳</div><div class="mob-btn-lbl">Deposit</div></button>
-  </div>
+<nav id="sidebar">
+  <div class="sbi on" onclick="showView('av')">✈</div>
+  <div class="sbi" onclick="showView('bin')">📊</div>
+  <div class="sbi" data-auth onclick="showView('dash')">◈</div>
+  <div class="sbi" data-auth onclick="showView('dep')">💳</div>
+  <div class="sbi-spacer"></div>
+  <div class="sbi" onclick="openModal('pf-modal')">🔐</div>
+  <div class="sbi" id="sidebar-acct" onclick="handleAcctClick()">👤</div>
 </nav>
-</div><!-- /app -->
+<div id="viewport">
+  <div id="view-av" class="view on">
+    <div class="demo-banner" id="demoBannerAv"><div class="demo-banner-tag">DEMO MODE</div><div class="demo-banner-text">Live preview. Sign in to play for real.</div><button class="demo-banner-btn" onclick="openModal('auth-modal','register')">CREATE ACCOUNT</button></div>
+    <div class="av-col-l" id="avLeftCol">
+      <div class="panel" style="position:relative">
+        <div class="panel-hd"><div class="panel-title">Bet · Panel 1</div></div>
+        <div class="panel-body">
+          <div class="bet-tabs"><div class="bt on">MANUAL</div><div class="bt">AUTO</div></div>
+          <div class="inp-group"><span class="inp-label">Bet Amount</span><div class="inp-row"><span class="inp-pfx">KES</span><input class="inp-field" id="av-amt1" type="number" value="100" min="10" oninput="recalcPot(1)"/></div><div class="q-row"><div class="q-btn" onclick="setv('av-amt1',50,1)">50</div><div class="q-btn" onclick="setv('av-amt1',100,1)">100</div><div class="q-btn" onclick="setv('av-amt1',500,1)">500</div><div class="q-btn" onclick="setv('av-amt1',1000,1)">1K</div></div></div>
+          <div class="auto-cashout-row"><span class="ac-label">Auto cashout ×</span><input class="ac-inp" id="av-co1" type="number" value="2.00" step="0.1" min="1.1" oninput="recalcPot(1)"/></div>
+          <div class="pot-box"><span class="pot-lbl">Potential win</span><span class="pot-val" id="av-pot1">KES 200.00</span></div>
+          <button class="action-btn btn-place" id="av-bet1-btn" onclick="placeBet(1)">PLACE BET</button>
+          <button class="action-btn btn-cashout" id="av-cash1-btn" onclick="cashOut(1)" style="display:none">CASH OUT NOW</button>
+        </div>
+        <div class="gate-overlay" id="gate1" style="display:none"><div class="gate-icon">🔒</div><div class="gate-text">Sign in to bet</div><button class="action-btn btn-generic" style="width:auto;padding:8px 20px;margin-top:4px" onclick="openModal('auth-modal')">SIGN IN</button></div>
+      </div>
+      <div class="pf-strip"><div class="pf-strip-hd"><span class="pf-strip-title">Provably Fair</span><span class="verified-badge">VERIFIED</span></div><div class="pf-line"><div class="pf-key">Server Seed Hash</div><div class="pf-val" id="pf-hash-short" onclick="openModal('pf-modal')">-</div></div><div class="pf-line"><div class="pf-key">Client Seed</div><div class="pf-val" id="pf-client-short">-</div></div><div class="pf-line"><div class="pf-key">Nonce</div><div class="pf-val" id="pf-nonce">-</div></div><button class="pf-verify-btn" onclick="openModal('pf-modal')">VERIFY THIS ROUND</button></div>
+    </div>
+    <div class="av-col-c">
+      <div class="arena-wrap">
+        <div class="arena-header"><div class="live-badge"><div class="live-dot-sm"></div><span class="live-txt">LIVE</span></div><span class="round-id" id="round-id-lbl">Round #-</span><div class="history-pills" id="hist-pills"></div></div>
+        <div class="flight-stage" id="flight-stage">
+          <svg id="av-svg" viewBox="0 0 700 340" preserveAspectRatio="none"><defs><linearGradient id="curveGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(255,204,0,0.3)"/><stop offset="100%" stop-color="rgba(255,204,0,0)"/></linearGradient><filter id="glow-f"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><linearGradient id="crashGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(255,23,68,0.3)"/><stop offset="100%" stop-color="rgba(255,23,68,0)"/></linearGradient></defs><line x1="0" y1="85" x2="700" y2="85" stroke="rgba(255,255,255,0.03)"/><line x1="0" y1="170" x2="700" y2="170" stroke="rgba(255,255,255,0.03)"/><line x1="0" y1="255" x2="700" y2="255" stroke="rgba(255,255,255,0.03)"/><line x1="175" y1="0" x2="175" y2="340" stroke="rgba(255,255,255,0.03)"/><line x1="350" y1="0" x2="350" y2="340" stroke="rgba(255,255,255,0.03)"/><line x1="525" y1="0" x2="525" y2="340" stroke="rgba(255,255,255,0.03)"/><path id="c-area" d="" fill="url(#curveGrad)" opacity=".6"/><path id="c-line" d="" fill="none" stroke="var(--accent)" stroke-width="2.5" filter="url(#glow-f)"/></svg>
+          <svg id="av-plane" width="52" height="52" viewBox="0 0 52 52" style="position:absolute;left:14px;bottom:14px;filter:drop-shadow(0 0 8px var(--accent))"><g id="plane-g"><polygon points="4,26 46,16 40,26 46,36" fill="var(--accent)"/><polygon points="18,26 30,20 34,26 30,32" fill="rgba(255,204,0,0.3)"/><polygon points="4,26 15,23 13,29" fill="rgba(255,255,255,0.8)"/><circle cx="4" cy="26" r="3" fill="var(--orange)" opacity=".7"><animate attributeName="r" values="3;1.5;3" dur=".5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".7;.2;.7" dur=".5s" repeatCount="indefinite"/></circle></g></svg>
+          <div class="mult-display"><div class="mult-big state-wait" id="mult-num">WAITING</div><div class="mult-sub" id="mult-sub">STARTING IN 5s</div></div>
+        </div>
+        <div class="arena-footer" id="arena-ticker"><div class="ticker-item"><span style="font-size:9px;color:var(--txt-3);text-transform:uppercase;letter-spacing:1px;font-weight:700">Live:</span></div></div>
+      </div>
+    </div>
+    <div class="av-col-r">
+      <div class="panel" style="position:relative">
+        <div class="panel-hd"><div class="panel-title">Bet · Panel 2</div></div>
+        <div class="panel-body">
+          <div class="inp-group"><span class="inp-label">Bet Amount</span><div class="inp-row"><span class="inp-pfx">KES</span><input class="inp-field" id="av-amt2" type="number" value="200" min="10" oninput="recalcPot(2)"/></div><div class="q-row"><div class="q-btn" onclick="setv('av-amt2',100,2)">100</div><div class="q-btn" onclick="setv('av-amt2',250,2)">250</div><div class="q-btn" onclick="setv('av-amt2',500,2)">500</div><div class="q-btn" onclick="setv('av-amt2',2000,2)">2K</div></div></div>
+          <div class="auto-cashout-row"><span class="ac-label">Auto cashout ×</span><input class="ac-inp" id="av-co2" type="number" value="3.00" step="0.1" min="1.1" oninput="recalcPot(2)"/></div>
+          <div class="pot-box"><span class="pot-lbl">Potential win</span><span class="pot-val" id="av-pot2">KES 600.00</span></div>
+          <button class="action-btn btn-place" id="av-bet2-btn" onclick="placeBet(2)">PLACE BET</button>
+          <button class="action-btn btn-cashout" id="av-cash2-btn" onclick="cashOut(2)" style="display:none">CASH OUT</button>
+        </div>
+        <div class="gate-overlay" id="gate2" style="display:none"><div class="gate-icon">🔒</div><div class="gate-text">Sign in to bet</div><button class="action-btn btn-generic" style="width:auto;padding:8px 20px;margin-top:4px" onclick="openModal('auth-modal')">SIGN IN</button></div>
+      </div>
+      <div class="panel"><div class="panel-hd"><div class="panel-title">Active Bets</div></div><div class="panel-body" style="padding:8px"><div class="bets-scroll" id="bets-list"><div class="empty-state">No active bets this round</div></div></div></div>
+      <div class="panel" style="flex:1;display:flex;flex-direction:column;min-height:180px"><div class="panel-hd"><div class="panel-title">Live Chat</div></div><div class="chat-wrap"><div class="chat-msgs" id="chat-msgs"></div><div class="chat-input-row"><input class="chat-inp" id="chat-inp" type="text" placeholder="Say something..." maxlength="80"/><button class="chat-send" onclick="sendChat()">SEND</button></div></div></div>
+    </div>
+  </div>
+  <div id="view-bin" class="view">
+    <div class="demo-banner" id="demoBannerBin"><div class="demo-banner-tag">DEMO MODE</div><div class="demo-banner-text">Live chart. Sign in to trade.</div><button class="demo-banner-btn" onclick="openModal('auth-modal','register')">CREATE ACCOUNT</button></div>
+    <div class="bin-col-l">
+      <div class="chart-top"><div class="asset-block"><div class="asset-sym">BTC/KES</div><div class="asset-full">BITCOIN / KENYAN SHILLING</div></div><div class="price-block"><div class="price-big price-up" id="btc-price">8,432,150</div><div class="change-tag ct-up" id="btc-chg">+2.34%</div></div><div class="tf-tabs"><div class="tf-tab on" onclick="setTF(this,'1M')">1M</div><div class="tf-tab" onclick="setTF(this,'5M')">5M</div><div class="tf-tab" onclick="setTF(this,'15M')">15M</div><div class="tf-tab" onclick="setTF(this,'1H')">1H</div></div></div>
+      <div class="chart-stage"><canvas id="candle-canvas"></canvas></div>
+    </div>
+    <div class="bin-col-r">
+      <div class="timer-card"><div class="timer-svg-wrap"><svg viewBox="0 0 90 90"><circle cx="45" cy="45" r="38" fill="none" stroke="var(--border)" stroke-width="6"/><circle id="timer-ring" cx="45" cy="45" r="38" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" stroke-dasharray="239" stroke-dashoffset="0" transform="rotate(-90 45 45)" style="transition:stroke-dashoffset .85s,stroke .3s"/></svg><div class="timer-center"><div class="timer-num" id="bin-timer-num">60</div><div class="timer-lbl">SECONDS</div></div></div><div style="font-size:10px;color:var(--txt-3);font-weight:700;letter-spacing:1px">TIME TO CLOSE</div></div>
+      <div class="panel"><div class="panel-hd"><div class="panel-title">Predict Direction</div></div><div class="panel-body" style="padding:10px"><div class="dir-cards"><div class="dir-card dir-card-up sel" id="dc-up" onclick="pickDir('up')"><div class="dir-pct dc-up">▲ 92%</div><div class="dir-label">CALL / UP</div></div><div class="dir-card dir-card-dn" id="dc-dn" onclick="pickDir('dn')"><div class="dir-pct dc-dn">▼ 85%</div><div class="dir-label">PUT / DOWN</div></div></div></div></div>
+      <div class="panel" style="position:relative"><div class="panel-hd"><div class="panel-title">Invest</div></div><div class="panel-body"><div class="inp-row"><span class="inp-pfx">KES</span><input class="inp-field" id="bin-amt" type="number" value="200" min="50" oninput="recalcBinProfit()"/></div><div class="q-row" style="margin-top:6px"><div class="q-btn" onclick="setbinamt(100)">100</div><div class="q-btn" onclick="setbinamt(200)">200</div><div class="q-btn" onclick="setbinamt(500)">500</div><div class="q-btn" onclick="setbinamt(1000)">1K</div></div><div class="profit-preview"><span class="pp-lbl">Profit if WIN</span><span class="pp-val" id="bin-profit">+KES 184.00</span></div><button class="action-btn btn-up" id="bin-exec-btn" onclick="execBinary()">▲ EXECUTE UP</button></div><div class="gate-overlay" id="gate-bin" style="display:none"><div class="gate-icon">🔒</div><div class="gate-text">Sign in to trade</div><button class="action-btn btn-generic" style="width:auto;padding:8px 20px;margin-top:4px" onclick="openModal('auth-modal')">SIGN IN</button></div></div>
+    </div>
+  </div>
+  <div id="view-dash" class="view" style="flex-direction:column;overflow-y:auto;padding:14px;gap:12px">
+    <div class="stats-row"><div class="stat-tile"><div class="st-icon">💰</div><div class="st-lbl">Balance</div><div class="st-val sv-a" id="dash-bal">-</div></div><div class="stat-tile"><div class="st-icon">📈</div><div class="st-lbl">Today P&L</div><div class="st-val sv-g" id="dash-pnl">KES 0</div></div><div class="stat-tile"><div class="st-icon">🎯</div><div class="st-lbl">Win Rate</div><div class="st-val sv-b" id="dash-wr">-%</div></div><div class="stat-tile"><div class="st-icon">✈</div><div class="st-lbl">AV Rounds</div><div class="st-val sv-a" id="dash-ar">0</div></div><div class="stat-tile"><div class="st-icon">⚡</div><div class="st-lbl">Best Mult</div><div class="st-val sv-g" id="dash-bm">-x</div></div><div class="stat-tile"><div class="st-icon">🔥</div><div class="st-lbl">Win Streak</div><div class="st-val sv-a" id="dash-ws">0</div></div></div>
+    <div class="tx-card"><div class="tx-card-hd">Recent Transactions</div><div id="tx-list"><div style="padding:20px;text-align:center;font-size:12px;color:var(--txt-3)">No transactions yet</div></div></div>
+  </div>
+  <div id="view-dep" class="view" style="align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px">
+    <div class="dep-card">
+      <div class="dep-logo-row"><div class="payhero-badge">⚡Instant📲</div><div style="font-size:12px;color:var(--txt-3)">×</div><div class="mpesa-badge-sm">M-PESA</div></div>
+      <div class="dep-title">Add Funds</div>
+      <div class="dep-sub">Instant M-Pesa deposit.<br/>Funds reflect in seconds.</div>
+      <div class="dep-field"><label>Phone Number</label><input class="dep-inp" id="dep-phone" type="tel" placeholder="e.g. 0712 345 678"/></div>
+      <div class="dep-field"><label>Amount (KES)</label><input class="dep-inp" id="dep-amount" type="number" value="500" min="10"/><div class="amt-presets"><div class="amt-preset" onclick="document.getElementById('dep-amount').value=100">100</div><div class="amt-preset" onclick="document.getElementById('dep-amount').value=500">500</div><div class="amt-preset" onclick="document.getElementById('dep-amount').value=1000">1,000</div><div class="amt-preset" onclick="document.getElementById('dep-amount').value=2000">2,000</div></div></div>
+      <div class="dep-info-box"><strong>How it works:</strong> Enter your Safaricom number. We'll send an STK Push. Enter your M-Pesa PIN on your phone. Funds are credited instantly.</div>
+      <button class="payhero-btn" id="dep-btn" onclick="initiateDeposit()">📱 SEND M-PESA PROMPT</button>
+      <div class="dep-steps"><div class="dep-step"><div class="step-num">1</div>Enter phone & amount, click the button above</div><div class="dep-step"><div class="step-num">2</div>A prompt appears on your phone — enter PIN</div><div class="dep-step"><div class="step-num">3</div>Funds credited to your KANDEGE balance instantly</div></div>
+    </div>
+  </div>
+</div>
+</div>
+<nav id="mobile-nav"><div class="mob-nav-row"><button class="mob-btn on" onclick="showView('av',this)" id="mob-av"><div class="mob-btn-icon">✈</div><div class="mob-btn-lbl">Aviator</div></button><button class="mob-btn" onclick="showView('bin',this)" id="mob-bin"><div class="mob-btn-icon">📊</div><div class="mob-btn-lbl">Binary</div></button><button class="mob-btn" data-auth onclick="showView('dash',this)" id="mob-dash"><div class="mob-btn-icon">◈</div><div class="mob-btn-lbl">Account</div></button><button class="mob-btn" data-auth onclick="showView('dep',this)" id="mob-dep"><div class="mob-btn-icon">💳</div><div class="mob-btn-lbl">Deposit</div></button></div></nav>
+</div>
 
-<!-- ══════════════ AUTH MODAL ══════════════ -->
 <div class="modal-overlay" id="auth-modal">
-  <div class="modal-box">
-    <div class="modal-accent-bar"></div>
-    <div class="modal-inner">
-      <div class="modal-close" onclick="closeModal('auth-modal')">✕</div>
-      <div class="modal-logo">KAN<span>DEGE</span></div>
-      <div class="modal-sub">PREMIUM GAMING PLATFORM · 18+</div>
-      <div class="auth-seg" id="auth-seg">
-        <div class="auth-seg-btn on" onclick="setAuthMode('login',this)">LOG IN</div>
-        <div class="auth-seg-btn" onclick="setAuthMode('register',this)">REGISTER</div>
-      </div>
-      <div class="auth-field">
-        <label>Phone or Email</label>
-        <input class="auth-inp" id="auth-ident" type="text" placeholder="0712 345 678 or email@mail.com"/>
-      </div>
-      <div class="auth-field">
-        <label>Password</label>
-        <input class="auth-inp" id="auth-pw" type="password" placeholder="••••••••"/>
-      </div>
-      <div class="auth-field" id="auth-confirm-field" style="display:none">
-        <label>Confirm Password</label>
-        <input class="auth-inp" type="password" placeholder="••••••••"/>
-      </div>
-      <div class="age-check" onclick="toggleAge()" id="age-row">
-        <div class="toggle-pill" id="age-toggle"><div class="toggle-knob"></div></div>
-        <div class="age-text">I confirm I am <b>18+ years old</b> and agree to the Terms &amp; Conditions and Responsible Gambling policy.</div>
-      </div>
-      <button class="submit-btn" onclick="submitAuth()" id="auth-submit-btn">ENTER PLATFORM</button>
-    </div>
-  </div>
+  <div class="modal-box"><div class="modal-accent-bar"></div><div class="modal-inner">
+    <div class="modal-close" onclick="closeModal('auth-modal')">✕</div>
+    <div class="modal-logo">KAN<span>DEGE</span></div>
+    <div class="modal-sub">PREMIUM GAMING PLATFORM · 18+</div>
+    <div class="auth-seg" id="auth-seg"><div class="auth-seg-btn on" onclick="setAuthMode('login',this)">LOG IN</div><div class="auth-seg-btn" onclick="setAuthMode('register',this)">REGISTER</div></div>
+    <div class="auth-field"><label>Email</label><input class="auth-inp" id="auth-email" type="email" placeholder="you@email.com"/></div>
+    <div class="auth-field"><label>Phone (optional)</label><input class="auth-inp" id="auth-phone" type="tel" placeholder="0712 345 678"/></div>
+    <div class="auth-field"><label>Password</label><input class="auth-inp" id="auth-pw" type="password" placeholder="Min 6 characters"/></div>
+    <div class="auth-field" id="auth-confirm-field" style="display:none"><label>Confirm Password</label><input class="auth-inp" id="auth-pw2" type="password" placeholder="Repeat password"/></div>
+    <div class="age-check" onclick="toggleAge()" id="age-row"><div class="toggle-pill" id="age-toggle"><div class="toggle-knob"></div></div><div class="age-text">I confirm I am <b>18+ years old</b> and agree to the Terms & Conditions.</div></div>
+    <div class="auth-error" id="auth-error"></div>
+    <button class="submit-btn" onclick="submitAuth()" id="auth-submit-btn">ENTER PLATFORM</button>
+  </div></div>
 </div>
 
-<!-- ══════════════ PROVABLY FAIR MODAL ══════════════ -->
 <div class="modal-overlay" id="pf-modal">
-  <div class="modal-box" style="max-width:460px">
-    <div class="modal-accent-bar" style="background:linear-gradient(90deg,var(--green),var(--blue))"></div>
-    <div class="modal-inner">
-      <div class="modal-close" onclick="closeModal('pf-modal')">✕</div>
-      <div class="modal-logo" style="font-size:20px">🔐 PROVABLY FAIR</div>
-      <div class="modal-sub">Every round is cryptographically verifiable. We cannot change outcomes after bets are placed.</div>
-      <div class="pf-step-row">
-        <div class="pf-step-num">1</div>
-        <div class="pf-step-content">
-          <div class="pf-step-title">Pre-committed Server Seed Hash</div>
-          <div class="pf-step-desc">Published before each round begins. Proves we cannot change the outcome after you bet.</div>
-          <div class="pf-hash-display" id="pf-modal-hash" onclick="copyEl(this)">—</div>
-        </div>
-      </div>
-      <div class="pf-step-row">
-        <div class="pf-step-num">2</div>
-        <div class="pf-step-content">
-          <div class="pf-step-title">Client Seed (Your Contribution)</div>
-          <div class="pf-step-desc">Combined with the server seed via HMAC-SHA256. You influence every outcome.</div>
-          <div class="pf-hash-display" id="pf-modal-client" onclick="copyEl(this)">—</div>
-        </div>
-      </div>
-      <div class="pf-step-row">
-        <div class="pf-step-num">3</div>
-        <div class="pf-step-content">
-          <div class="pf-step-title">Crash Point Formula</div>
-          <div class="pf-step-desc">After round ends, the server seed is revealed. Anyone can verify:</div>
-          <div class="formula-box">crashPoint = max(1.00, 0.99 / (1 − H)) where H = HMAC-SHA256(serverSeed + nonce, clientSeed) normalized to [0,1)</div>
-        </div>
-      </div>
-      <div style="font-size:11px;color:var(--txt-2);margin-top:4px;line-height:1.6">
-        The house edge is <b style="color:var(--accent)">6%</b> — applied by the formula itself. When H &lt; 0.06, crash = 1.00×. This is open, auditable, and cannot be overridden.
-      </div>
-      <button class="action-btn btn-generic" style="margin-top:16px" onclick="closeModal('pf-modal')">CLOSE</button>
-    </div>
-  </div>
+  <div class="modal-box" style="max-width:460px"><div class="modal-accent-bar" style="background:linear-gradient(90deg,var(--green),var(--blue))"></div><div class="modal-inner">
+    <div class="modal-close" onclick="closeModal('pf-modal')">✕</div>
+    <div class="modal-logo" style="font-size:20px">🔐 PROVABLY FAIR</div>
+    <div class="modal-sub">Every round is cryptographically verifiable.</div>
+    <div class="pf-step-row"><div class="pf-step-num">1</div><div><div class="pf-step-title">Pre-committed Server Seed Hash</div><div class="pf-step-desc">Published before each round.</div><div class="pf-hash-display" id="pf-modal-hash" onclick="copyEl(this)">-</div></div></div>
+    <div class="pf-step-row"><div class="pf-step-num">2</div><div><div class="pf-step-title">Client Seed</div><div class="pf-step-desc">Your contribution to each outcome.</div><div class="pf-hash-display" id="pf-modal-client" onclick="copyEl(this)">-</div></div></div>
+    <div class="pf-step-row"><div class="pf-step-num">3</div><div><div class="pf-step-title">Crash Point Formula</div><div class="pf-step-desc">After round ends, the server seed is revealed.</div><div class="formula-box">crashPoint = max(1.00, 0.99 / (1 - H)) where H = HMAC-SHA256(serverSeed+nonce, clientSeed) normalized to [0,1)</div></div></div>
+    <button class="action-btn btn-generic" style="margin-top:16px" onclick="closeModal('pf-modal')">CLOSE</button>
+  </div></div>
 </div>
 
-<!-- TOAST -->
 <div id="toaster"></div>
 
 <script>
 'use strict';
 
 /* ═══════════════════════════════════
+   SUPABASE INIT
+════════════════════════════════════ */
+let sb = null; // supabase client, initialized after config fetch
+
+async function initSupabase() {
+  try {
+    const res = await fetch('/api/config');
+    const { supabaseUrl, supabaseAnonKey } = await res.json();
+    if (!supabaseUrl || !supabaseAnonKey) throw new Error('Missing config');
+    sb = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+    // Listen for auth state changes
+    sb.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        onSupabaseLogin(session.user);
+      } else if (event === 'SIGNED_OUT') {
+        onSupabaseLogout();
+      }
+    });
+    // Check existing session
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) onSupabaseLogin(session.user);
+    else updateNavVisibility();
+  } catch (err) {
+    console.error('Supabase init failed:', err);
+    updateNavVisibility();
+  }
+}
+
+/* ═══════════════════════════════════
+   API HELPER
+════════════════════════════════════ */
+async function api(path, opts = {}) {
+  const session = await sb?.auth.getSession();
+  const token = session?.data?.session?.access_token;
+  const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  const res = await fetch(path, { ...opts, headers });
+  return res.json();
+}
+
+/* ═══════════════════════════════════
    THEME
-═══════════════════════════════════ */
+════════════════════════════════════ */
 let dark = true;
-function toggleTheme(){
+function toggleTheme() {
   dark = !dark;
   document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
   document.getElementById('themeToggle').textContent = dark ? '🌙' : '☀️';
@@ -1040,183 +423,190 @@ function toggleTheme(){
 }
 
 /* ═══════════════════════════════════
-   ★ AUTH-GATED NAV VISIBILITY
-   Hides all nav items with [data-auth]
-   when user is not logged in.
-═══════════════════════════════════ */
-function updateNavVisibility(){
-  const loggedIn = !!user;
-  // Hide/show nav items that require auth
-  document.querySelectorAll('[data-auth]').forEach(el => {
-    el.style.display = loggedIn ? '' : 'none';
+   NAVIGATION
+════════════════════════════════════ */
+const views = ['av', 'bin', 'dash', 'dep'];
+let currentView = 'av';
+
+function showView(id, el) {
+  if (!user && (id === 'dep' || id === 'dash')) {
+    toast('Please sign in to access this section', 'alert');
+    openModal('auth-modal', 'login');
+    return;
+  }
+  currentView = id;
+  views.forEach(v => {
+    const ve = document.getElementById('view-' + v);
+    if (v === id) { ve.classList.add('on'); ve.style.display = ''; }
+    else { ve.classList.remove('on'); ve.style.display = 'none'; }
   });
-  // Demo badge in topbar: show only when NOT logged in
+  document.querySelectorAll('.tnav').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.tnav').forEach(t => {
+    const map = { av: 'AVIATOR', bin: 'BINARY', dash: 'DASHBOARD', dep: 'DEPOSIT' };
+    if (t.textContent.includes(map[id])) t.classList.add('on');
+  });
+  document.querySelectorAll('.sbi').forEach((s, i) => s.classList.toggle('on', i === views.indexOf(id)));
+  document.querySelectorAll('.mob-btn').forEach(b => b.classList.remove('on'));
+  const mm = { av: 'mob-av', bin: 'mob-bin', dash: 'mob-dash', dep: 'mob-dep' };
+  if (mm[id]) document.getElementById(mm[id])?.classList.add('on');
+  if (id === 'bin') setTimeout(resizeCandle, 80);
+  if (id === 'dash') loadDashboard();
+  if (id === 'dep') pollPendingDeposits();
+}
+
+function updateNavVisibility() {
+  const loggedIn = !!user;
+  document.querySelectorAll('[data-auth]').forEach(el => el.style.display = loggedIn ? '' : 'none');
   document.getElementById('demoBadge').style.display = loggedIn ? 'none' : 'flex';
-  // Demo banners over game views
   document.getElementById('demoBannerAv').style.display = loggedIn ? 'none' : 'flex';
   document.getElementById('demoBannerBin').style.display = loggedIn ? 'none' : 'flex';
 }
 
 /* ═══════════════════════════════════
-   VIEW ROUTING — blocks auth views
-═══════════════════════════════════ */
-const views = ['av','bin','dash','dep'];
-
-function showView(id, el){
-  // ★ Block deposit and dashboard for guests
-  if(!user && (id === 'dep' || id === 'dash')){
-    toast('Please sign in to access this section','alert');
-    openModal('auth-modal','login');
-    return;
-  }
-  views.forEach(v => {
-    const el2 = document.getElementById('view-'+v);
-    if(v === id){ el2.classList.add('on'); el2.style.display = ''; }
-    else { el2.classList.remove('on'); el2.style.display = 'none'; }
-  });
-  // Top nav highlight
-  document.querySelectorAll('.tnav').forEach(t => t.classList.remove('on'));
-  document.querySelectorAll('.tnav').forEach(t => {
-    const map = {av:'AVIATOR',bin:'BINARY',dash:'DASHBOARD',dep:'DEPOSIT'};
-    if(t.textContent.includes(map[id])) t.classList.add('on');
-  });
-  // Sidebar highlight
-  document.querySelectorAll('.sbi').forEach((s,i) => {
-    s.classList.toggle('on', i === views.indexOf(id));
-  });
-  // Mobile nav highlight
-  document.querySelectorAll('.mob-btn').forEach(b => b.classList.remove('on'));
-  const mobMap = {av:'mob-av',bin:'mob-bin',dash:'mob-dash',dep:'mob-dep'};
-  if(mobMap[id]) document.getElementById(mobMap[id])?.classList.add('on');
-  if(id==='bin') setTimeout(resizeCandle, 80);
-}
-
-// Init: hide non-active views
-document.addEventListener('DOMContentLoaded',()=>{
-  ['bin','dash','dep'].forEach(v => {
-    document.getElementById('view-'+v).style.display = 'none';
-  });
-  // ★ Apply demo mode on load
-  updateNavVisibility();
-  showGates();
-});
-
-/* ═══════════════════════════════════
-   MODAL SYSTEM
-═══════════════════════════════════ */
-function openModal(id, mode){
+   MODAL
+════════════════════════════════════ */
+function openModal(id, mode) {
   document.getElementById(id).classList.add('show');
-  if(id==='auth-modal' && mode) setAuthMode(mode, document.querySelectorAll('#auth-seg .auth-seg-btn')[mode==='login'?0:1]);
+  if (id === 'auth-modal' && mode) setAuthMode(mode, document.querySelectorAll('#auth-seg .auth-seg-btn')[mode === 'login' ? 0 : 1]);
 }
-function closeModal(id){ document.getElementById(id).classList.remove('show'); }
-document.querySelectorAll('.modal-overlay').forEach(o => {
-  o.addEventListener('click', e => { if(e.target === o) closeModal(o.id); });
-});
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) closeModal(o.id); }));
 
 /* ═══════════════════════════════════
    STATE
-═══════════════════════════════════ */
+════════════════════════════════════ */
 let user = null;
-let balance = 0, pnl = 0, avRoundCount = 0, bestMult = 1, streak = 0, wins = 0, trades = 0;
-let txLog = [];
+let balance = 0;
+let localTxLog = []; // in-memory for fast UI, synced from API
 
-function fmt(n){ return 'KES '+Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+function fmt(n) { return 'KES ' + Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 
-function updateUI(){
-  const b = document.getElementById('balNum');
-  if(b) b.textContent = fmt(balance);
-  const b2 = document.getElementById('balNum2');
-  if(b2) b2.textContent = fmt(balance);
-  document.getElementById('dash-bal').textContent = fmt(balance);
+function updateBalanceDisplay() {
+  const els = [document.getElementById('balNum'), document.getElementById('balNum2')];
+  els.forEach(e => { if (e) e.textContent = fmt(balance); });
+}
+
+function updateDashboardStats(stats) {
+  if (!stats) return;
+  document.getElementById('dash-bal').textContent = fmt(stats.balance);
   const pnlEl = document.getElementById('dash-pnl');
-  pnlEl.textContent = (pnl>=0?'+':'-')+fmt(Math.abs(pnl));
-  pnlEl.className = 'st-val '+(pnl>=0?'sv-g':'sv-r');
-  document.getElementById('dash-wr').textContent = trades>0?Math.round(wins/trades*100)+'%':'—%';
-  document.getElementById('dash-ar').textContent = avRoundCount;
-  document.getElementById('dash-bm').textContent = bestMult>1?bestMult.toFixed(2)+'x':'—x';
-  document.getElementById('dash-ws').textContent = streak;
-}
-
-function addTx(type, amount, icon, color){
-  const t = new Date();
-  txLog.unshift({type,amount,icon,color,time:t.getHours()+':'+String(t.getMinutes()).padStart(2,'0')});
-  if(txLog.length>25) txLog.pop();
-  renderTx();
-}
-
-function renderTx(){
-  const el = document.getElementById('tx-list');
-  if(!txLog.length){ el.innerHTML='<div style="padding:20px;text-align:center;font-size:12px;color:var(--txt-3)">No transactions yet</div>'; return; }
-  el.innerHTML = txLog.map(t=>`
-    <div class="tx-entry">
-      <div class="tx-ico" style="background:${t.color}22">${t.icon}</div>
-      <div class="tx-info"><div class="tx-type">${t.type}</div><div class="tx-time">${t.time}</div></div>
-      <div class="tx-amount" style="color:${t.amount>=0?'var(--green)':'var(--red)'}">${t.amount>=0?'+':'-'}${fmt(Math.abs(t.amount))}</div>
-    </div>`).join('');
+  const pnl = stats.pnl || 0;
+  pnlEl.textContent = (pnl >= 0 ? '+' : '-') + fmt(Math.abs(pnl));
+  pnlEl.className = 'st-val ' + (pnl >= 0 ? 'sv-g' : 'sv-r');
+  document.getElementById('dash-wr').textContent = stats.winRate + '%';
+  document.getElementById('dash-ar').textContent = stats.aviatorRounds;
+  document.getElementById('dash-bm').textContent = stats.bestMultiplier > 1 ? stats.bestMultiplier.toFixed(2) + 'x' : '-x';
+  document.getElementById('dash-ws').textContent = stats.maxWinStreak;
 }
 
 /* ═══════════════════════════════════
    AUTH
-═══════════════════════════════════ */
+════════════════════════════════════ */
 let ageOk = false, authMode = 'login';
 
-function setAuthMode(mode, el){
+function setAuthMode(mode, el) {
   authMode = mode;
   document.querySelectorAll('#auth-seg .auth-seg-btn').forEach(b => b.classList.remove('on'));
-  if(el) el.classList.add('on');
-  document.getElementById('auth-confirm-field').style.display = mode==='register' ? 'block' : 'none';
-  document.getElementById('auth-submit-btn').textContent = mode==='login' ? 'ENTER PLATFORM' : 'CREATE ACCOUNT';
+  if (el) el.classList.add('on');
+  document.getElementById('auth-confirm-field').style.display = mode === 'register' ? 'block' : 'none';
+  document.getElementById('auth-submit-btn').textContent = mode === 'login' ? 'ENTER PLATFORM' : 'CREATE ACCOUNT';
+  document.getElementById('auth-error').style.display = 'none';
 }
 
-function toggleAge(){
+function toggleAge() {
   ageOk = !ageOk;
   document.getElementById('age-toggle').classList.toggle('on', ageOk);
 }
 
-function submitAuth(){
-  const ident = document.getElementById('auth-ident').value.trim();
-  const pw = document.getElementById('auth-pw').value;
-  if(!ident || !pw){ toast('Please fill all fields','alert'); return; }
-  if(authMode==='register' && !ageOk){ toast('Please confirm you are 18+','alert'); return; }
-
-  user = { name: ident.split('@')[0] || ident.slice(0,8), ident };
-  balance = 0;
-  closeModal('auth-modal');
-  onLogin();
+function showAuthError(msg) {
+  const el = document.getElementById('auth-error');
+  el.textContent = msg;
+  el.style.display = 'block';
 }
 
-function onLogin(){
-  // Show balance pill + logout
+async function submitAuth() {
+  const email = document.getElementById('auth-email').value.trim();
+  const phone = document.getElementById('auth-phone').value.trim();
+  const pw = document.getElementById('auth-pw').value;
+  const errEl = document.getElementById('auth-error');
+  errEl.style.display = 'none';
+
+  if (!email) { showAuthError('Email is required'); return; }
+  if (!pw || pw.length < 6) { showAuthError('Password must be at least 6 characters'); return; }
+  if (authMode === 'register' && !ageOk) { showAuthError('Please confirm you are 18+'); return; }
+  if (authMode === 'register') {
+    const pw2 = document.getElementById('auth-pw2').value;
+    if (pw !== pw2) { showAuthError('Passwords do not match'); return; }
+  }
+
+  const btn = document.getElementById('auth-submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'PLEASE WAIT...';
+
+  try {
+    let result;
+    const meta = { phone };
+    if (authMode === 'register') {
+      result = await sb.auth.signUp({ email, password: pw, options: { data: meta } });
+    } else {
+      result = await sb.auth.signInWithPassword({ email, password: pw });
+    }
+
+    if (result.error) throw result.error;
+    closeModal('auth-modal');
+    // onSupabaseLogin is called by the auth state listener
+  } catch (err) {
+    showAuthError(err.message || 'Authentication failed');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = authMode === 'login' ? 'ENTER PLATFORM' : 'CREATE ACCOUNT';
+  }
+}
+
+async function onSupabaseLogin(supabaseUser) {
+  user = {
+    id: supabaseUser.id,
+    name: supabaseUser.user_metadata?.display_name || supabaseUser.email?.split('@')[0] || 'Player',
+    email: supabaseUser.email,
+    phone: supabaseUser.user_metadata?.phone || ''
+  };
+
+  // Fetch real balance
+  try {
+    const data = await api('/api/balance');
+    if (data.success) balance = data.balance;
+  } catch (e) { console.error('Balance fetch failed:', e); }
+
+  // Update UI
   document.getElementById('balWrap').style.display = 'flex';
   document.getElementById('authBtns').innerHTML = `
     <div class="user-pill" onclick="showView('dash')">
       <div class="user-av">${user.name.charAt(0).toUpperCase()}</div>
-      <div>
-        <div class="user-nm">${user.name.toUpperCase()}</div>
-        <div class="user-bal-sm" id="balNum2">${fmt(balance)}</div>
-      </div>
+      <div><div class="user-nm">${user.name.toUpperCase()}</div><div class="user-bal-sm" id="balNum2">${fmt(balance)}</div></div>
     </div>
     <button class="logout-btn" onclick="doLogout()" title="Log out">⏻</button>`;
 
-  // Hide all gates
   hideGates();
-  // ★ Update nav: show deposit/dashboard, hide demo banners
   updateNavVisibility();
-  updateUI();
+  updateBalanceDisplay();
 
-  toast(`Welcome to KANDEGE! Deposit funds to start playing.`,'info');
-  // Auto-navigate to deposit so they can fund their account
-  showView('dep');
+  toast('Welcome to KANDEGE!', 'win');
+
+  // Start balance polling every 15s
+  startBalancePoll();
 }
 
-/* ★ Logout */
-function doLogout(){
-  user = null;
-  balance = 0; pnl = 0; avRoundCount = 0; bestMult = 1; streak = 0; wins = 0; trades = 0;
-  txLog = [];
-  renderTx();
+async function doLogout() {
+  try { await sb.auth.signOut(); } catch (e) {}
+  onSupabaseLogout();
+}
 
-  // Restore auth buttons
+function onSupabaseLogout() {
+  user = null;
+  balance = 0;
+  localTxLog = [];
+  stopBalancePoll();
+
   document.getElementById('authBtns').innerHTML = `
     <div style="display:flex;gap:6px">
       <button class="auth-btn btn-login" onclick="openModal('auth-modal','login')">LOG IN</button>
@@ -1224,591 +614,485 @@ function doLogout(){
     </div>`;
   document.getElementById('balWrap').style.display = 'none';
 
-  // Show gates again
   showGates();
-  // ★ Update nav: hide deposit/dashboard, show demo banners
   updateNavVisibility();
-  updateUI();
-
-  // Go back to aviator
+  updateBalanceDisplay();
   showView('av');
-  toast('You have been logged out.','info');
+  toast('You have been logged out.', 'info');
 }
 
-/* Sidebar account icon: login if guest, dashboard if logged in */
-function handleAcctClick(){
-  if(!user) openModal('auth-modal');
+function handleAcctClick() {
+  if (!user) openModal('auth-modal');
   else showView('dash');
 }
 
-/* Gate management */
-function showGates(){
-  ['gate1','gate2','gate-bin'].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.style.display = 'flex';
-  });
+/* Balance polling */
+let balancePollIv = null;
+function startBalancePoll() {
+  stopBalancePoll();
+  balancePollIv = setInterval(async () => {
+    if (!user) return;
+    try {
+      const data = await api('/api/balance');
+      if (data.success && data.balance !== balance) {
+        balance = data.balance;
+        updateBalanceDisplay();
+      }
+    } catch (e) {}
+  }, 15000);
 }
-function hideGates(){
-  ['gate1','gate2','gate-bin'].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.style.display = 'none';
-  });
+function stopBalancePoll() { if (balancePollIv) { clearInterval(balancePollIv); balancePollIv = null; } }
+
+/* Pending deposit polling */
+let depositPollIv = null;
+function pollPendingDeposits() {
+  if (depositPollIv) clearInterval(depositPollIv);
+  depositPollIv = setInterval(async () => {
+    if (!user || currentView !== 'dep') { clearInterval(depositPollIv); return; }
+    try {
+      const data = await api('/api/transactions?limit=3');
+      if (data.success && data.pendingDeposits === 0 && depositPollIv) {
+        clearInterval(depositPollIv);
+        const data2 = await api('/api/balance');
+        if (data2.success) {
+          balance = data2.balance;
+          updateBalanceDisplay();
+          toast('Deposit credited!', 'win');
+        }
+      }
+    } catch (e) {}
+  }, 5000);
 }
 
-function checkLogin(){
-  if(!user){
-    showGates();
-    return false;
-  }
-  return true;
-}
+/* Gates */
+function showGates() { ['gate1', 'gate2', 'gate-bin'].forEach(id => { const e = document.getElementById(id); if (e) e.style.display = 'flex'; }); }
+function hideGates() { ['gate1', 'gate2', 'gate-bin'].forEach(id => { const e = document.getElementById(id); if (e) e.style.display = 'none'; }); }
+function checkLogin() { if (!user) { showGates(); return false; } return true; }
 
 /* ═══════════════════════════════════
    PROVABLY FAIR
-═══════════════════════════════════ */
-let pfServer='', pfClient='', pfNonce=0, pfHash='';
-async function sha256(str){
+════════════════════════════════════ */
+let pfServer = '', pfClient = '', pfNonce = 0, pfHash = '';
+async function sha256(str) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
-async function genSeeds(){
-  pfServer = crypto.randomUUID().replace(/-/g,'');
-  pfClient = crypto.randomUUID().replace(/-/g,'').slice(0,16);
+async function genSeeds() {
+  pfServer = crypto.randomUUID().replace(/-/g, '');
+  pfClient = crypto.randomUUID().replace(/-/g, '').slice(0, 16);
   pfNonce++;
   pfHash = await sha256(pfServer);
   updatePFDisplay();
 }
-function updatePFDisplay(){
-  const short = h => h.slice(0,10)+'…'+h.slice(-6);
-  document.getElementById('pf-hash-short').textContent = short(pfHash);
+function updatePFDisplay() {
+  const s = h => h.slice(0, 10) + '...' + h.slice(-6);
+  document.getElementById('pf-hash-short').textContent = s(pfHash);
   document.getElementById('pf-client-short').textContent = pfClient;
-  document.getElementById('pf-nonce').textContent = '#'+pfNonce;
+  document.getElementById('pf-nonce').textContent = '#' + pfNonce;
   document.getElementById('pf-modal-hash').textContent = pfHash;
   document.getElementById('pf-modal-client').textContent = pfClient;
 }
-function copyEl(el){
-  navigator.clipboard.writeText(el.textContent).catch(()=>{});
-  toast('Copied!','info');
-}
+function copyEl(el) { navigator.clipboard.writeText(el.textContent).catch(() => {}); toast('Copied!', 'info'); }
 
 /* ═══════════════════════════════════
    CRASH POINT
-═══════════════════════════════════ */
-function calcCrash(){
-  const r = Math.random();
-  if(r < 0.06) return 1.00;
-  return Math.max(1.01, +(0.99/(1-r)).toFixed(2));
-}
+════════════════════════════════════ */
+function calcCrash() { const r = Math.random(); if (r < 0.06) return 1.00; return Math.max(1.01, +(0.99 / (1 - r)).toFixed(2)); }
 
 /* ═══════════════════════════════════
    AVIATOR ENGINE
-═══════════════════════════════════ */
-let avState = 'waiting';
-let avMult = 1.0;
-let avCrashAt = 0;
-let avPoints = [];
-let avAnimId = null;
-let avRound = 0;
-let avHistory = [];
-let bets = [
-  {active:false, amount:0, cashed:false},
-  {active:false, amount:0, cashed:false}
-];
+════════════════════════════════════ */
+let avState = 'waiting', avMult = 1.0, avCrashAt = 0, avPoints = [], avAnimId = null, avRound = 0, avHistory = [];
+let bets = [{ active: false, amount: 0, cashed: false, betId: null }, { active: false, amount: 0, cashed: false, betId: null }];
 let fakePlayers = [];
 
-const multNumEl  = ()=>document.getElementById('mult-num');
-const multSubEl  = ()=>document.getElementById('mult-sub');
-const cLineEl    = ()=>document.getElementById('c-line');
-const cAreaEl    = ()=>document.getElementById('c-area');
-const planeEl    = ()=>document.getElementById('av-plane');
+const multNumEl = () => document.getElementById('mult-num');
+const multSubEl = () => document.getElementById('mult-sub');
+const cLineEl = () => document.getElementById('c-line');
+const cAreaEl = () => document.getElementById('c-area');
+const planeEl = () => document.getElementById('av-plane');
 
-function setBetMode(el, mode){ /* placeholder */ }
-
-function recalcPot(slot){
-  const amt = parseFloat(document.getElementById(`av-amt${slot}`).value)||0;
-  const co  = parseFloat(document.getElementById(`av-co${slot}`).value)||2;
-  document.getElementById(`av-pot${slot}`).textContent = fmt(amt*co);
+function recalcPot(slot) {
+  const amt = parseFloat(document.getElementById(`av-amt${slot}`).value) || 0;
+  const co = parseFloat(document.getElementById(`av-co${slot}`).value) || 2;
+  document.getElementById(`av-pot${slot}`).textContent = fmt(amt * co);
 }
-function setv(id, v, slot){ document.getElementById(id).value = v; recalcPot(slot); }
+function setv(id, v, slot) { document.getElementById(id).value = v; recalcPot(slot); }
 
-function placeBet(slot){
-  if(!checkLogin()) return;
-  const amt = parseFloat(document.getElementById(`av-amt${slot}`).value)||0;
-  if(amt < 10){ toast('Minimum bet: KES 10','alert'); return; }
-  if(amt > balance){ toast('Insufficient balance','alert'); return; }
-  if(bets[slot-1].active){ toast('Bet already placed','alert'); return; }
-  bets[slot-1] = {active:true, amount:amt, cashed:false};
-  balance -= amt;
-  updateUI();
-  document.getElementById(`av-bet${slot}-btn`).style.display = 'none';
-  document.getElementById(`av-cash${slot}-btn`).style.display = 'block';
-  toast(`Bet ${slot} placed: ${fmt(amt)}`, 'info');
-  renderBetsList();
+async function placeBet(slot) {
+  if (!checkLogin()) return;
+  const amt = parseFloat(document.getElementById(`av-amt${slot}`).value) || 0;
+  if (amt < 10) { toast('Minimum bet: KES 10', 'alert'); return; }
+  if (amt > balance) { toast('Insufficient balance', 'alert'); return; }
+  if (bets[slot - 1].active) { toast('Bet already placed', 'alert'); return; }
+  if (avState !== 'waiting' && avState !== 'flying') return;
+
+  // Call API
+  const btn = document.getElementById(`av-bet${slot}-btn`);
+  btn.disabled = true; btn.textContent = 'BETTING...';
+  try {
+    const data = await api('/api/game/bet', {
+      method: 'POST',
+      body: JSON.stringify({
+        amount: amt, panel: slot, roundNumber: avRound,
+        autoCashout: parseFloat(document.getElementById(`av-co${slot}`).value) || null,
+        serverSeedHash: pfHash, clientSeed: pfClient, nonce: pfNonce
+      })
+    });
+    if (!data.success) { toast(data.error || 'Bet failed', 'alert'); return; }
+    bets[slot - 1] = { active: true, amount: amt, cashed: false, betId: data.betId };
+    balance = data.balance;
+    updateBalanceDisplay();
+    document.getElementById(`av-bet${slot}-btn`).style.display = 'none';
+    document.getElementById(`av-cash${slot}-btn`).style.display = 'block';
+    toast(`Bet ${slot} placed: ${fmt(amt)}`, 'info');
+    renderBetsList();
+  } catch (e) { toast('Network error', 'alert'); }
+  finally { btn.disabled = false; btn.textContent = 'PLACE BET'; }
 }
 
-function cashOut(slot){
-  const bet = bets[slot-1];
-  if(!bet.active || bet.cashed || avState!=='flying') return;
-  bet.cashed = true;
-  const won = bet.amount * avMult;
-  balance += won;
-  pnl += won - bet.amount;
-  wins++; trades++; streak++;
-  bestMult = Math.max(bestMult, avMult);
-  addTx(`Aviator ×${avMult.toFixed(2)} (Bet ${slot})`, won-bet.amount, '✈', '#ffcc00');
-  toast(`🎉 Cashed out ×${avMult.toFixed(2)}! Won ${fmt(won)}`,'win');
-  document.getElementById(`av-cash${slot}-btn`).style.display = 'none';
-  updateUI();
-  renderBetsList();
+async function cashOut(slot) {
+  const bet = bets[slot - 1];
+  if (!bet.active || bet.cashed || avState !== 'flying') return;
+  const btn = document.getElementById(`av-cash${slot}-btn`);
+  btn.disabled = true; btn.textContent = 'CASHING OUT...';
+  try {
+    const data = await api('/api/game/cashout', {
+      method: 'POST',
+      body: JSON.stringify({ betId: bet.betId, multiplier: avMult, crashPoint: avCrashAt })
+    });
+    if (!data.success) { toast(data.error || 'Cashout failed', 'alert'); return; }
+    bet.cashed = true;
+    balance = data.balance;
+    updateBalanceDisplay();
+    toast(`Cashed out x${avMult.toFixed(2)}! Won ${fmt(data.winnings)}`, 'win');
+    document.getElementById(`av-cash${slot}-btn`).style.display = 'none';
+    document.getElementById(`av-bet${slot}-btn`).style.display = 'block';
+    renderBetsList();
+  } catch (e) { toast('Network error', 'alert'); }
+  finally { btn.disabled = false; btn.textContent = 'CASH OUT'; }
 }
 
-function avWait(){
+async function recordLoss(bet) {
+  if (!bet.betId) return;
+  try { await api('/api/game/loss', { method: 'POST', body: JSON.stringify({ betId: bet.betId, crashPoint: avCrashAt }) }); } catch (e) {}
+}
+
+function avWait() {
   avState = 'waiting';
-  cLineEl().setAttribute('d',''); cAreaEl().setAttribute('d','');
-  cLineEl().setAttribute('stroke','var(--accent)');
-  cAreaEl().setAttribute('fill','url(#curveGrad)');
+  cLineEl().setAttribute('d', ''); cAreaEl().setAttribute('d', '');
+  cLineEl().setAttribute('stroke', 'var(--accent)'); cAreaEl().setAttribute('fill', 'url(#curveGrad)');
   planeEl().style.display = 'none';
-  multNumEl().className = 'mult-big state-wait';
-  multNumEl().textContent = 'WAITING';
-  bets.forEach((b,i) => {
-    if(!b.cashed && b.active){
-      pnl -= b.amount; trades++; streak = 0;
-      addTx(`Aviator LOSS (Bet ${i+1})`, -b.amount, '💸','#ff1744');
-    }
-    bets[i] = {active:false,amount:0,cashed:false};
-    document.getElementById(`av-bet${i+1}-btn`).style.display = 'block';
-    document.getElementById(`av-cash${i+1}-btn`).style.display = 'none';
+  multNumEl().className = 'mult-big state-wait'; multNumEl().textContent = 'WAITING';
+
+  // Resolve active bets as losses
+  bets.forEach((b, i) => {
+    if (b.active && !b.cashed) recordLoss(b);
+    bets[i] = { active: false, amount: 0, cashed: false, betId: null };
+    document.getElementById(`av-bet${i + 1}-btn`).style.display = 'block';
+    document.getElementById(`av-bet${i + 1}-btn`).disabled = false;
+    document.getElementById(`av-bet${i + 1}-btn`).textContent = 'PLACE BET';
+    document.getElementById(`av-cash${i + 1}-btn`).style.display = 'none';
   });
-  updateUI();
   renderBetsList();
+
   let cd = 5;
   multSubEl().textContent = `NEXT ROUND IN ${cd}s`;
-  const iv = setInterval(()=>{
-    cd--;
-    if(cd<=0){ clearInterval(iv); avFly(); }
-    else multSubEl().textContent = `NEXT ROUND IN ${cd}s`;
-  }, 1000);
+  const iv = setInterval(() => { cd--; if (cd <= 0) { clearInterval(iv); avFly(); } else multSubEl().textContent = `NEXT ROUND IN ${cd}s`; }, 1000);
 }
 
-async function avFly(){
+async function avFly() {
   await genSeeds();
-  avState = 'flying';
-  avMult = 1.0;
-  avCrashAt = calcCrash();
-  avPoints = [];
-  avRound++;
+  avState = 'flying'; avMult = 1.0; avCrashAt = calcCrash(); avPoints = []; avRound++;
   document.getElementById('round-id-lbl').textContent = `Round #${avRound}`;
-  multNumEl().className = 'mult-big state-fly';
-  multSubEl().textContent = '';
+  multNumEl().className = 'mult-big state-fly'; multSubEl().textContent = '';
   planeEl().style.display = 'block';
   spawnFakePlayers();
-  const autoCo1 = parseFloat(document.getElementById('av-co1').value)||0;
-  const autoCo2 = parseFloat(document.getElementById('av-co2').value)||0;
-  const SVG_W=700, SVG_H=340;
+  const autoCo1 = parseFloat(document.getElementById('av-co1').value) || 0;
+  const autoCo2 = parseFloat(document.getElementById('av-co2').value) || 0;
+  const SW = 700, SH = 340;
 
-  function tick(){
-    if(avState!=='flying') return;
-    const speed = 0.015 + Math.log(avMult+1)*0.007;
-    avMult = +(avMult + speed).toFixed(3);
-    multNumEl().textContent = avMult.toFixed(2)+'x';
-    if(bets[0].active && !bets[0].cashed && autoCo1>1 && avMult>=autoCo1) cashOut(1);
-    if(bets[1].active && !bets[1].cashed && autoCo2>1 && avMult>=autoCo2) cashOut(2);
-    bets.forEach((b,i) => {
-      if(b.active && !b.cashed)
-        document.getElementById(`av-pot${i+1}`).textContent = fmt(b.amount*avMult);
-    });
-    fakePlayers.forEach(fp => {
-      if(!fp.cashedOut && avMult >= fp.cashoutAt){
-        fp.cashedOut = true;
-        addChatMsg(fp.name, `Cashed out ×${fp.cashoutAt.toFixed(2)} — ${fmt(fp.bet*fp.cashoutAt)} 🎉`, true, avMult>=5);
-      }
-    });
-    renderBetsList();
-    renderTicker();
-    const prog = Math.min((avMult-1)/Math.max(avCrashAt-1,0.01),1);
-    const cx = prog*(SVG_W-30)+10;
-    const cy = SVG_H-10 - Math.pow(prog,1.3)*(SVG_H-50);
-    avPoints.push({x:cx,y:cy});
-    if(avPoints.length>1){
-      const d = 'M '+avPoints.map(p=>`${p.x} ${p.y}`).join(' L ');
-      cLineEl().setAttribute('d',d);
-      const last = avPoints[avPoints.length-1];
-      cAreaEl().setAttribute('d',d+` L ${last.x} ${SVG_H-10} L ${avPoints[0].x} ${SVG_H-10} Z`);
+  function tick() {
+    if (avState !== 'flying') return;
+    avMult = +(avMult + 0.015 + Math.log(avMult + 1) * 0.007).toFixed(3);
+    multNumEl().textContent = avMult.toFixed(2) + 'x';
+    if (bets[0].active && !bets[0].cashed && autoCo1 > 1 && avMult >= autoCo1) cashOut(1);
+    if (bets[1].active && !bets[1].cashed && autoCo2 > 1 && avMult >= autoCo2) cashOut(2);
+    bets.forEach((b, i) => { if (b.active && !b.cashed) document.getElementById(`av-pot${i + 1}`).textContent = fmt(b.amount * avMult); });
+    fakePlayers.forEach(fp => { if (!fp.cashedOut && avMult >= fp.cashoutAt) { fp.cashedOut = true; addChatMsg(fp.name, `Cashed out x${fp.cashoutAt.toFixed(2)} - ${fmt(fp.bet * fp.cashoutAt)}`, true, avMult >= 5); } });
+    renderBetsList(); renderTicker();
+    const prog = Math.min((avMult - 1) / Math.max(avCrashAt - 1, 0.01), 1);
+    const cx = prog * (SW - 30) + 10, cy = SH - 10 - Math.pow(prog, 1.3) * (SH - 50);
+    avPoints.push({ x: cx, y: cy });
+    if (avPoints.length > 1) {
+      const d = 'M ' + avPoints.map(p => `${p.x} ${p.y}`).join(' L ');
+      cLineEl().setAttribute('d', d);
+      const last = avPoints[avPoints.length - 1];
+      cAreaEl().setAttribute('d', d + ` L ${last.x} ${SH - 10} L ${avPoints[0].x} ${SH - 10} Z`);
       const stage = document.getElementById('flight-stage');
-      const sw=stage.offsetWidth, sh=stage.offsetHeight;
-      const px=(last.x/SVG_W)*sw-26, py=(last.y/SVG_H)*sh-26;
-      planeEl().style.left=px+'px'; planeEl().style.top=py+'px';
-      if(avPoints.length>2){
-        const prev=avPoints[avPoints.length-2];
-        const ang=Math.atan2((last.y-prev.y)*(sh/SVG_H),(last.x-prev.x)*(sw/SVG_W))*180/Math.PI;
-        document.getElementById('plane-g').setAttribute('transform',`rotate(${ang-5},26,26)`);
+      const sw = stage.offsetWidth, sh = stage.offsetHeight;
+      planeEl().style.left = (last.x / SW) * sw - 26 + 'px';
+      planeEl().style.top = (last.y / SH) * sh - 26 + 'px';
+      if (avPoints.length > 2) {
+        const prev = avPoints[avPoints.length - 2];
+        const ang = Math.atan2((last.y - prev.y) * (sh / SH), (last.x - prev.x) * (sw / SW)) * 180 / Math.PI;
+        document.getElementById('plane-g').setAttribute('transform', `rotate(${ang - 5},26,26)`);
       }
     }
-    if(avMult >= avCrashAt) avCrashRound();
-    else avAnimId = requestAnimationFrame(tick);
+    if (avMult >= avCrashAt) avCrashRound(); else avAnimId = requestAnimationFrame(tick);
   }
   avAnimId = requestAnimationFrame(tick);
 }
 
-function avCrashRound(){
-  avState='crashed';
-  cancelAnimationFrame(avAnimId);
-  cLineEl().setAttribute('stroke','var(--red)');
-  cAreaEl().setAttribute('fill','url(#crashGrad)');
-  multNumEl().className='mult-big state-crash';
-  multNumEl().textContent=avMult.toFixed(2)+'x';
-  multSubEl().textContent='💥 FLEW AWAY!';
-  planeEl().style.display='none';
-  avHistory.unshift(+avMult.toFixed(2));
-  if(avHistory.length>14) avHistory.pop();
-  avRoundCount++;
+function avCrashRound() {
+  avState = 'crashed'; cancelAnimationFrame(avAnimId);
+  cLineEl().setAttribute('stroke', 'var(--red)'); cAreaEl().setAttribute('fill', 'url(#crashGrad)');
+  multNumEl().className = 'mult-big state-crash'; multNumEl().textContent = avMult.toFixed(2) + 'x';
+  multSubEl().textContent = 'FLEW AWAY!'; planeEl().style.display = 'none';
+  avHistory.unshift(+avMult.toFixed(2)); if (avHistory.length > 14) avHistory.pop();
   renderHistory();
-  addChatMsg('🎲 System',`Round ended at ${avMult.toFixed(2)}x`,false,false);
-  setTimeout(avWait,4000);
+  addChatMsg('System', `Round ended at ${avMult.toFixed(2)}x`, false, false);
+  setTimeout(avWait, 4000);
 }
 
-function renderHistory(){
-  const el = document.getElementById('hist-pills');
-  el.innerHTML = avHistory.map(m=>{
-    const cls = m<1.5?'lo':m<3?'md':m<10?'hi':'xl';
-    return `<div class="hpill ${cls}">${m.toFixed(2)}x</div>`;
+function renderHistory() {
+  document.getElementById('hist-pills').innerHTML = avHistory.map(m => {
+    const c = m < 1.5 ? 'lo' : m < 3 ? 'md' : m < 10 ? 'hi' : 'xl';
+    return `<div class="hpill ${c}">${m.toFixed(2)}x</div>`;
   }).join('');
 }
 
-function renderBetsList(){
+function renderBetsList() {
   const el = document.getElementById('bets-list');
-  const all = [...bets.map((b,i)=>({...b, who:`YOU (Bet ${i+1})`})).filter(b=>b.active),
-               ...fakePlayers.map(fp=>({active:true,amount:fp.bet,cashed:fp.cashedOut,who:fp.name}))];
-  if(!all.length){ el.innerHTML='<div class="empty-state">No active bets this round</div>'; return; }
-  el.innerHTML = all.map(b=>`
-    <div class="b-row">
-      <div class="b-dot" style="background:${b.who.startsWith('YOU')?'var(--accent)':'var(--green)'}"></div>
-      <div class="b-name">${b.who}</div>
-      <div class="b-amt">${fmt(b.amount)}</div>
-      <div class="b-win">${b.cashed?'✓ OUT':fmt(b.amount*avMult)}</div>
-    </div>`).join('');
+  const all = [...bets.map((b, i) => ({ ...b, who: `YOU (P${i + 1})` })).filter(b => b.active), ...fakePlayers.map(fp => ({ active: true, amount: fp.bet, cashed: fp.cashedOut, who: fp.name }))];
+  if (!all.length) { el.innerHTML = '<div class="empty-state">No active bets this round</div>'; return; }
+  el.innerHTML = all.map(b => `<div class="b-row"><div class="b-dot" style="background:${b.who.startsWith('YOU') ? 'var(--accent)' : 'var(--green)'}"></div><div class="b-name">${b.who}</div><div class="b-amt">${fmt(b.amount)}</div><div class="b-win">${b.cashed ? 'OUT' : fmt(b.amount * avMult)}</div></div>`).join('');
 }
 
-function renderTicker(){
+function renderTicker() {
   const el = document.getElementById('arena-ticker');
-  const items = fakePlayers.slice(0,4).map(fp=>`
-    <div class="ticker-item">
-      <span class="ticker-name">${fp.name}</span>
-      <span class="ticker-mult">×${avMult.toFixed(2)}</span>
-      <span class="ticker-amt">${fmt(fp.bet*avMult)}</span>
-    </div>`).join('<span style="color:var(--border);padding:0 6px">·</span>');
-  el.innerHTML=`<div class="ticker-item" style="margin-right:6px"><span style="font-size:9px;color:var(--txt-3);text-transform:uppercase;letter-spacing:1px;font-weight:700">Live:</span></div>`+items;
+  el.innerHTML = `<div class="ticker-item"><span style="font-size:9px;color:var(--txt-3);letter-spacing:1px;font-weight:700">LIVE:</span></div>` + fakePlayers.slice(0, 4).map(fp => `<div class="ticker-item"><span class="ticker-name">${fp.name}</span><span class="ticker-mult">x${avMult.toFixed(2)}</span><span class="ticker-amt">${fmt(fp.bet * avMult)}</span></div>`).join('<span style="color:var(--border);padding:0 6px">·</span>');
 }
 
-const FAKE_NAMES=['P***r','M***a','J***n','W***i','A***e','D***o','K***h','L***a','F***x','T***y','N***i','B***l'];
-const FAKE_COLORS=['#ff6d00','#2979ff','#00e676','#e040fb','#00bcd4','#ff4081','#ffcc00','#69f0ae'];
-function spawnFakePlayers(){
-  const count = 6+Math.floor(Math.random()*8);
+const FN = ['P***r', 'M***a', 'J***n', 'W***i', 'A***e', 'D***o', 'K***h', 'L***a'];
+function spawnFakePlayers() {
   fakePlayers = [];
-  for(let i=0;i<count;i++){
-    fakePlayers.push({
-      name: FAKE_NAMES[Math.floor(Math.random()*FAKE_NAMES.length)],
-      color: FAKE_COLORS[Math.floor(Math.random()*FAKE_COLORS.length)],
-      bet: [50,100,200,300,500,1000][Math.floor(Math.random()*6)],
-      cashoutAt: +(1.2+Math.random()*4).toFixed(2),
-      cashedOut: false
-    });
+  for (let i = 0; i < 6 + Math.floor(Math.random() * 6); i++) {
+    fakePlayers.push({ name: FN[Math.floor(Math.random() * FN.length)], bet: [50, 100, 200, 300, 500, 1000][Math.floor(Math.random() * 6)], cashoutAt: +(1.2 + Math.random() * 4).toFixed(2), cashedOut: false });
   }
 }
 
 /* ═══════════════════════════════════
-   LIVE CHAT
-═══════════════════════════════════ */
-const chatNames = ['Pendo','Moses','Aisha','Kamau','Njoki','Brian','Faith','Tonny','Grace','David'];
-const chatColors = ['#ff6d00','#2979ff','#00e676','#e040fb','#ffcc00','#00bcd4','#ff4081'];
-
-function addChatMsg(name, text, isWin=false, isBig=false){
+   CHAT
+════════════════════════════════════ */
+const chatN = ['Pendo', 'Moses', 'Aisha', 'Kamau', 'Njoki', 'Brian', 'Faith'];
+const chatC = ['#ff6d00', '#2979ff', '#00e676', '#e040fb', '#ffcc00'];
+function addChatMsg(name, text, isWin = false, isBig = false) {
   const el = document.getElementById('chat-msgs');
-  const now = new Date();
-  const time = now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
-  const color = chatColors[name.charCodeAt(0)%chatColors.length];
-  const cls = isBig?'chat-msg is-big':isWin?'chat-msg is-win':'chat-msg';
-  const div = document.createElement('div');
-  div.className = cls;
-  div.innerHTML = `
-    <div class="cm-header">
-      <div class="cm-av" style="background:${color}">${name.charAt(0)}</div>
-      <div class="cm-name">${name}</div>
-      <div class="cm-time">${time}</div>
-    </div>
-    <div class="cm-text">${text}</div>`;
-  el.appendChild(div);
-  el.scrollTop = el.scrollHeight;
-  while(el.children.length > 40) el.removeChild(el.firstChild);
+  const t = new Date();
+  const c = chatC[name.charCodeAt(0) % chatC.length];
+  const d = document.createElement('div');
+  d.className = 'chat-msg' + (isBig ? ' is-big' : isWin ? ' is-win' : '');
+  d.innerHTML = `<div class="cm-header"><div class="cm-av" style="background:${c}">${name.charAt(0)}</div><div class="cm-name">${name}</div><div class="cm-time">${t.getHours()}:${String(t.getMinutes()).padStart(2, '0')}</div></div><div class="cm-text">${text}</div>`;
+  el.appendChild(d); el.scrollTop = el.scrollHeight;
+  while (el.children.length > 40) el.removeChild(el.firstChild);
 }
-
-function sendChat(){
-  if(!user){ toast('Sign in to chat','alert'); openModal('auth-modal'); return; }
+function sendChat() {
+  if (!user) { toast('Sign in to chat', 'alert'); openModal('auth-modal'); return; }
   const inp = document.getElementById('chat-inp');
   const msg = inp.value.trim();
-  if(!msg) return;
-  addChatMsg(user.name, msg);
-  inp.value = '';
+  if (!msg) return;
+  addChatMsg(user.name, msg); inp.value = '';
 }
-document.getElementById('chat-inp').addEventListener('keydown', e=>{ if(e.key==='Enter') sendChat(); });
-
-const chatMsgs = [
-  m=>`Flying at ${m}x, holding tight! 🤞`,
-  m=>`Cashed at ${(m-0.2).toFixed(2)}x, not greedy 😂`,
-  m=>`Just doubled up!`,
-  m=>`This is my lucky round I can feel it`,
-  m=>`Too scared to hold past ${m}x`,
-  m=>`${m}x — LET IT FLYYYY ✈`,
-  m=>`New strategy: always cash at 1.5x`,
-  m=>`Who else is still riding? 🚀`,
-];
-setInterval(()=>{
-  if(avState==='flying' && Math.random()<0.4){
-    const name = chatNames[Math.floor(Math.random()*chatNames.length)];
-    const msgFn = chatMsgs[Math.floor(Math.random()*chatMsgs.length)];
-    addChatMsg(name, msgFn(avMult.toFixed(2)));
-  }
-}, 3500);
-
-setTimeout(()=>{
-  addChatMsg('Pendo','Wagwan everyone 👋');
-  addChatMsg('Moses','Good luck all!');
-  addChatMsg('Aisha','First round, excited 🙏');
-},500);
+document.getElementById('chat-inp').addEventListener('keydown', e => { if (e.key === 'Enter') sendChat(); });
+const chatMsgs = [m => `Flying at ${m}x!`, m => `Cashed at ${(m - 0.2).toFixed(2)}x`, m => `Just doubled!`, m => `Holding...`, m => `${m}x LETS GO`];
+setInterval(() => { if (avState === 'flying' && Math.random() < 0.4) addChatMsg(chatN[Math.floor(Math.random() * chatN.length)], chatMsgs[Math.floor(Math.random() * chatMsgs.length)](avMult.toFixed(2))); }, 3500);
+setTimeout(() => { addChatMsg('Pendo', 'Wagwan everyone'); addChatMsg('Moses', 'Good luck!'); }, 500);
 
 /* ═══════════════════════════════════
    CANDLESTICK CHART
-═══════════════════════════════════ */
+════════════════════════════════════ */
 const cCanvas = document.getElementById('candle-canvas');
 const cctx = cCanvas.getContext('2d');
-let candles = [];
-let liveCandle = null;
-let btcPrice = 8432150;
-let candleTick = 0;
-const CANDLE_SECS = 6;
+let candles = [], liveCandle = null, btcPrice = 8432150, candleTick = 0;
+const CSEC = 6;
+for (let i = 0; i < 80; i++) { const o = btcPrice, d = (Math.random() - 0.47) * 16000; btcPrice += d; candles.push({ o, h: Math.max(o, btcPrice) + Math.random() * 5000, l: Math.min(o, btcPrice) - Math.random() * 5000, c: btcPrice }); }
+liveCandle = { o: btcPrice, h: btcPrice, l: btcPrice, c: btcPrice };
 
-for(let i=0;i<80;i++){
-  const o=btcPrice, d=(Math.random()-.47)*16000;
-  btcPrice+=d;
-  candles.push({o,h:Math.max(o,btcPrice)+Math.random()*5000,l:Math.min(o,btcPrice)-Math.random()*5000,c:btcPrice});
-}
-liveCandle={o:btcPrice,h:btcPrice,l:btcPrice,c:btcPrice};
+function resizeCandle() { const r = cCanvas.getBoundingClientRect(); if (!r.width || !r.height) return; cCanvas.width = r.width * devicePixelRatio; cCanvas.height = r.height * devicePixelRatio; cctx.scale(devicePixelRatio, devicePixelRatio); drawCandles(); }
 
-function resizeCandle(){
-  const r = cCanvas.getBoundingClientRect();
-  if(!r.width||!r.height) return;
-  cCanvas.width = r.width * devicePixelRatio;
-  cCanvas.height = r.height * devicePixelRatio;
-  cctx.scale(devicePixelRatio, devicePixelRatio);
-  drawCandles();
-}
-
-function drawCandles(){
-  const W = cCanvas.getBoundingClientRect().width;
-  const H = cCanvas.getBoundingClientRect().height;
-  if(!W||!H) return;
-  const isdark = document.documentElement.getAttribute('data-theme')==='dark';
-  const UP = isdark?'#00e676':'#00a651';
-  const DN = isdark?'#ff1744':'#d50032';
-  const GRID = isdark?'rgba(255,255,255,0.04)':'rgba(0,0,80,0.06)';
-  const LABL = isdark?'rgba(120,160,200,0.7)':'rgba(40,70,130,0.7)';
-  cctx.clearRect(0,0,W*2,H*2);
+function drawCandles() {
+  const W = cCanvas.getBoundingClientRect().width, H = cCanvas.getBoundingClientRect().height;
+  if (!W || !H) return;
+  const dk = document.documentElement.getAttribute('data-theme') === 'dark';
+  const UP = dk ? '#00e676' : '#00a651', DN = dk ? '#ff1744' : '#d50032', GR = dk ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,80,0.06)', LB = dk ? 'rgba(120,160,200,0.7)' : 'rgba(40,70,130,0.7)';
+  cctx.clearRect(0, 0, W * 2, H * 2);
   const vis = [...candles.slice(-75), liveCandle];
-  const mn = Math.min(...vis.map(c=>c.l))*.9997;
-  const mx = Math.max(...vis.map(c=>c.h))*1.0003;
-  const rng = mx-mn;
-  const PAD={l:58,r:14,t:8,b:26};
-  const cw = (W-PAD.l-PAD.r)/vis.length;
-  const toX = i => PAD.l + i*cw + cw*.5;
-  const toY = p => H-PAD.b-(p-mn)/rng*(H-PAD.t-PAD.b);
-  cctx.strokeStyle=GRID; cctx.lineWidth=1;
-  cctx.fillStyle=LABL; cctx.font=`9px Share Tech Mono`; cctx.textAlign='right';
-  for(let i=0;i<=4;i++){
-    const y=PAD.t+(H-PAD.t-PAD.b)*i/4;
-    cctx.beginPath(); cctx.moveTo(PAD.l,y); cctx.lineTo(W-PAD.r,y); cctx.stroke();
-    const price=mx-rng*i/4;
-    cctx.fillText(Math.round(price/1000)+'K',PAD.l-3,y+3);
-  }
-  const maxVol = vis.reduce((a,c)=>Math.max(a,Math.abs(c.c-c.o)),0)||1;
-  vis.forEach((c,i)=>{
-    const vol=Math.abs(c.c-c.o)/maxVol;
-    const bw=Math.max(cw*.6,1.5);
-    cctx.fillStyle = c.c>=c.o?'rgba(0,230,118,0.06)':'rgba(255,23,68,0.06)';
-    cctx.fillRect(toX(i)-bw/2, H-PAD.b-vol*(H-PAD.t-PAD.b), bw, vol*(H-PAD.t-PAD.b));
-  });
-  vis.forEach((c,i)=>{
-    const x=toX(i), bw=Math.max(cw*.55,1.5);
-    const isUp=c.c>=c.o, col=isUp?UP:DN;
-    cctx.strokeStyle=col; cctx.lineWidth=1.2;
-    cctx.beginPath(); cctx.moveTo(x,toY(c.h)); cctx.lineTo(x,toY(c.l)); cctx.stroke();
-    const y1=toY(Math.max(c.o,c.c)), y2=toY(Math.min(c.o,c.c));
-    const bh=Math.max(y2-y1,1.5);
-    if(i===vis.length-1){ cctx.shadowColor=col; cctx.shadowBlur=10; }
-    cctx.fillStyle=col;
-    cctx.fillRect(x-bw/2,y1,bw,bh);
-    cctx.shadowBlur=0;
-  });
-  const ly=toY(liveCandle.c), isUp2=liveCandle.c>=liveCandle.o;
-  cctx.strokeStyle=isUp2?UP:DN; cctx.lineWidth=1; cctx.setLineDash([4,4]);
-  cctx.beginPath(); cctx.moveTo(PAD.l,ly); cctx.lineTo(W-PAD.r,ly); cctx.stroke();
-  cctx.setLineDash([]);
-  const LBL_W=58, LBL_H=17;
-  cctx.fillStyle=isUp2?UP:DN;
-  const rx=W-PAD.r-LBL_W;
-  cctx.beginPath();
-  cctx.roundRect?cctx.roundRect(rx,ly-LBL_H/2,LBL_W,LBL_H,3):cctx.rect(rx,ly-LBL_H/2,LBL_W,LBL_H);
-  cctx.fill();
-  cctx.fillStyle='#fff'; cctx.font='bold 8px Share Tech Mono'; cctx.textAlign='center';
-  cctx.fillText(Math.round(liveCandle.c/1000)+'K',rx+LBL_W/2,ly+3);
-  cctx.fillStyle=LABL; cctx.font='8px Share Tech Mono'; cctx.textAlign='center';
-  const step=Math.max(1,Math.floor(vis.length/6));
-  for(let i=0;i<vis.length;i+=step){
-    const t=new Date(Date.now()-(vis.length-i)*CANDLE_SECS*1000);
-    cctx.fillText(t.getHours()+':'+String(t.getMinutes()).padStart(2,'0'), toX(i), H-PAD.b+14);
-  }
+  const mn = Math.min(...vis.map(c => c.l)) * 0.9997, mx = Math.max(...vis.map(c => c.h)) * 1.0003, rng = mx - mn;
+  const P = { l: 58, r: 14, t: 8, b: 26 }, cw = (W - P.l - P.r) / vis.length;
+  const toX = i => P.l + i * cw + cw * 0.5, toY = p => H - P.b - (p - mn) / rng * (H - P.t - P.b);
+  cctx.strokeStyle = GR; cctx.lineWidth = 1; cctx.fillStyle = LB; cctx.font = '9px Share Tech Mono'; cctx.textAlign = 'right';
+  for (let i = 0; i <= 4; i++) { const y = P.t + (H - P.t - P.b) * i / 4; cctx.beginPath(); cctx.moveTo(P.l, y); cctx.lineTo(W - P.r, y); cctx.stroke(); cctx.fillText(Math.round((mx - rng * i / 4) / 1000) + 'K', P.l - 3, y + 3); }
+  vis.forEach((c, i) => { const v = Math.abs(c.c - c.o) / (Math.max(...vis.map(x => Math.abs(x.c - x.o))) || 1); const bw = Math.max(cw * 0.6, 1.5); cctx.fillStyle = c.c >= c.o ? 'rgba(0,230,118,0.06)' : 'rgba(255,23,68,0.06)'; cctx.fillRect(toX(i) - bw / 2, H - P.b - v * (H - P.t - P.b), bw, v * (H - P.t - P.b)); });
+  vis.forEach((c, i) => { const x = toX(i), bw = Math.max(cw * 0.55, 1.5), up = c.c >= c.o, col = up ? UP : DN; cctx.strokeStyle = col; cctx.lineWidth = 1.2; cctx.beginPath(); cctx.moveTo(x, toY(c.h)); cctx.lineTo(x, toY(c.l)); cctx.stroke(); const y1 = toY(Math.max(c.o, c.c)), y2 = toY(Math.min(c.o, c.c)), bh = Math.max(y2 - y1, 1.5); if (i === vis.length - 1) { cctx.shadowColor = col; cctx.shadowBlur = 10; } cctx.fillStyle = col; cctx.fillRect(x - bw / 2, y1, bw, bh); cctx.shadowBlur = 0; });
+  const ly = toY(liveCandle.c), up2 = liveCandle.c >= liveCandle.o;
+  cctx.strokeStyle = up2 ? UP : DN; cctx.lineWidth = 1; cctx.setLineDash([4, 4]); cctx.beginPath(); cctx.moveTo(P.l, ly); cctx.lineTo(W - P.r, ly); cctx.stroke(); cctx.setLineDash([]);
+  cctx.fillStyle = up2 ? UP : DN; const rx = W - P.r - 58; cctx.fillRect(rx, ly - 8, 58, 17); cctx.fillStyle = '#fff'; cctx.font = 'bold 8px Share Tech Mono'; cctx.textAlign = 'center'; cctx.fillText(Math.round(liveCandle.c / 1000) + 'K', rx + 29, ly + 3);
 }
-
-function btcTick(){
-  const delta=(Math.random()-.476)*5500;
-  btcPrice=Math.max(6000000,btcPrice+delta);
-  if(liveCandle){
-    liveCandle.c=btcPrice;
-    liveCandle.h=Math.max(liveCandle.h,btcPrice);
-    liveCandle.l=Math.min(liveCandle.l,btcPrice);
-  }
+function btcTick() {
+  const delta = (Math.random() - 0.476) * 5500; btcPrice = Math.max(6000000, btcPrice + delta);
+  if (liveCandle) { liveCandle.c = btcPrice; liveCandle.h = Math.max(liveCandle.h, btcPrice); liveCandle.l = Math.min(liveCandle.l, btcPrice); }
   candleTick++;
-  if(candleTick>=CANDLE_SECS){
-    candles.push({...liveCandle});
-    if(candles.length>150) candles.shift();
-    liveCandle={o:btcPrice,h:btcPrice,l:btcPrice,c:btcPrice};
-    candleTick=0;
-  }
-  const prev=candles.length>0?candles[candles.length-1].o:btcPrice;
-  const chg=(btcPrice-prev)/prev*100;
-  const pxEl=document.getElementById('btc-price');
-  pxEl.textContent=Math.round(btcPrice).toLocaleString();
-  pxEl.className='price-big '+(delta>=0?'price-up':'price-dn');
-  const chgEl=document.getElementById('btc-chg');
-  chgEl.textContent=(chg>=0?'+':'')+chg.toFixed(3)+'%';
-  chgEl.className='change-tag '+(chg>=0?'ct-up':'ct-dn');
-  if(document.getElementById('view-bin').classList.contains('on')) drawCandles();
+  if (candleTick >= CSEC) { candles.push({ ...liveCandle }); if (candles.length > 150) candles.shift(); liveCandle = { o: btcPrice, h: btcPrice, l: btcPrice, c: btcPrice }; candleTick = 0; }
+  const prev = candles.length > 0 ? candles[candles.length - 1].o : btcPrice, chg = (btcPrice - prev) / prev * 100;
+  const pe = document.getElementById('btc-price'); pe.textContent = Math.round(btcPrice).toLocaleString(); pe.className = 'price-big ' + (delta >= 0 ? 'price-up' : 'price-dn');
+  const ce = document.getElementById('btc-chg'); ce.textContent = (chg >= 0 ? '+' : '') + chg.toFixed(3) + '%'; ce.className = 'change-tag ' + (chg >= 0 ? 'ct-up' : 'ct-dn');
+  if (document.getElementById('view-bin').classList.contains('on')) drawCandles();
 }
-setInterval(btcTick,1100);
-setTimeout(()=>{ resizeCandle(); window.addEventListener('resize',resizeCandle); },200);
+setInterval(btcTick, 1100);
+setTimeout(() => { resizeCandle(); window.addEventListener('resize', resizeCandle); }, 200);
 
 /* ═══════════════════════════════════
-   BINARY OPTIONS ENGINE
-═══════════════════════════════════ */
-let binDir='up', binTimer=60, binTimerIv=null;
-let binTradeActive=false, binTradeAmt=0, binTradePrice=0;
+   BINARY
+════════════════════════════════════ */
+let binDir = 'up', binTimer = 60, binTimerIv = null, binTradeActive = false, binTradeAmt = 0, binTradePrice = 0, binTradeId = null;
 
-function pickDir(d){
-  binDir=d;
-  document.getElementById('dc-up').classList.toggle('sel',d==='up');
-  document.getElementById('dc-dn').classList.toggle('sel',d==='dn');
-  const btn=document.getElementById('bin-exec-btn');
-  btn.textContent=d==='up'?'▲ EXECUTE CALL':'▼ EXECUTE PUT';
-  btn.className='action-btn '+(d==='up'?'btn-up':'btn-dn');
+function pickDir(d) {
+  binDir = d;
+  document.getElementById('dc-up').classList.toggle('sel', d === 'up');
+  document.getElementById('dc-dn').classList.toggle('sel', d === 'dn');
+  const btn = document.getElementById('bin-exec-btn');
+  btn.textContent = d === 'up' ? '▲ EXECUTE CALL' : '▼ EXECUTE PUT';
+  btn.className = 'action-btn ' + (d === 'up' ? 'btn-up' : 'btn-dn');
   recalcBinProfit();
 }
-function setbinamt(v){ document.getElementById('bin-amt').value=v; recalcBinProfit(); }
-function recalcBinProfit(){
-  const amt=parseFloat(document.getElementById('bin-amt').value)||0;
-  const pct=binDir==='up'?0.92:0.85;
-  document.getElementById('bin-profit').textContent='+'+fmt(amt*pct);
+function setbinamt(v) { document.getElementById('bin-amt').value = v; recalcBinProfit(); }
+function recalcBinProfit() { const a = parseFloat(document.getElementById('bin-amt').value) || 0; document.getElementById('bin-profit').textContent = '+' + fmt(a * (binDir === 'up' ? 0.92 : 0.85)); }
+
+async function execBinary() {
+  if (!checkLogin()) return;
+  const amt = parseFloat(document.getElementById('bin-amt').value) || 0;
+  if (amt < 50) { toast('Minimum trade: KES 50', 'alert'); return; }
+  if (amt > balance) { toast('Insufficient balance', 'alert'); return; }
+  if (binTradeActive) { toast('Trade already active', 'alert'); return; }
+  const btn = document.getElementById('bin-exec-btn');
+  btn.disabled = true; btn.textContent = 'EXECUTING...';
+  try {
+    const data = await api('/api/game/binary?action=execute', {
+      method: 'POST',
+      body: JSON.stringify({ amount: amt, direction: binDir, entryPrice: btcPrice })
+    });
+    if (!data.success) { toast(data.error || 'Trade failed', 'alert'); return; }
+    binTradeActive = true; binTradeAmt = amt; binTradePrice = btcPrice; binTradeId = data.tradeId;
+    balance = data.balance; updateBalanceDisplay();
+    toast(`${binDir.toUpperCase()} trade: ${fmt(amt)}`, 'info');
+  } catch (e) { toast('Network error', 'alert'); }
+  finally { btn.disabled = false; btn.textContent = binDir === 'up' ? '▲ EXECUTE CALL' : '▼ EXECUTE PUT'; }
 }
-function execBinary(){
-  if(!checkLogin()) return;
-  const amt=parseFloat(document.getElementById('bin-amt').value)||0;
-  if(amt<50){ toast('Minimum trade: KES 50','alert'); return; }
-  if(amt>balance){ toast('Insufficient balance','alert'); return; }
-  if(binTradeActive){ toast('Trade already active','alert'); return; }
-  binTradeActive=true; binTradeAmt=amt; binTradePrice=btcPrice;
-  balance-=amt; updateUI();
-  toast(`${binDir.toUpperCase()} trade: ${fmt(amt)} @ ${Math.round(binTradePrice).toLocaleString()}`,'info');
-}
-function resolveBinary(){
-  if(binTradeActive){
-    const won=(binDir==='up'&&btcPrice>binTradePrice)||(binDir==='dn'&&btcPrice<binTradePrice);
-    const pct=binDir==='up'?0.92:0.85;
-    if(won){
-      const profit=binTradeAmt*pct;
-      balance+=binTradeAmt+profit; pnl+=profit; wins++; trades++; streak++;
-      addTx(`Binary WIN (${binDir.toUpperCase()})`,profit,'📈','#00e676');
-      toast(`🎉 Binary WIN! +${fmt(profit)}`,'win');
-    } else {
-      pnl-=binTradeAmt; trades++; streak=0;
-      addTx(`Binary LOSS (${binDir.toUpperCase()})`,-binTradeAmt,'📉','#ff1744');
-      toast(`Binary LOSS. -${fmt(binTradeAmt)}`,'loss');
-    }
-    binTradeActive=false; updateUI();
+
+async function resolveBinary() {
+  if (binTradeActive && binTradeId) {
+    const won = (binDir === 'up' && btcPrice > binTradePrice) || (binDir === 'dn' && btcPrice < binTradePrice);
+    try {
+      const data = await api('/api/game/binary?action=resolve', {
+        method: 'POST',
+        body: JSON.stringify({ tradeId: binTradeId, exitPrice: btcPrice, won })
+      });
+      if (data.success) {
+        if (data.won) { balance = data.balance; toast(`Binary WIN! +${fmt(data.profit)}`, 'win'); }
+        else { toast('Binary LOSS', 'loss'); }
+        updateBalanceDisplay();
+      }
+    } catch (e) {}
   }
+  binTradeActive = false; binTradeId = null;
   startBinTimer();
 }
-function startBinTimer(){
-  binTimer=60; clearInterval(binTimerIv);
-  binTimerIv=setInterval(()=>{
+
+function startBinTimer() {
+  binTimer = 60; clearInterval(binTimerIv);
+  binTimerIv = setInterval(() => {
     binTimer--;
-    document.getElementById('bin-timer-num').textContent=binTimer;
-    const ring=document.getElementById('timer-ring');
-    ring.setAttribute('stroke-dashoffset', 239*(1-binTimer/60));
-    ring.setAttribute('stroke', binTimer<=10?'var(--red)':binTimer<=20?'var(--orange)':'var(--accent)');
-    if(binTimer<=0){ clearInterval(binTimerIv); resolveBinary(); }
-  },1000);
+    document.getElementById('bin-timer-num').textContent = binTimer;
+    const ring = document.getElementById('timer-ring');
+    ring.setAttribute('stroke-dashoffset', 239 * (1 - binTimer / 60));
+    ring.setAttribute('stroke', binTimer <= 10 ? 'var(--red)' : binTimer <= 20 ? 'var(--orange)' : 'var(--accent)');
+    if (binTimer <= 0) { clearInterval(binTimerIv); resolveBinary(); }
+  }, 1000);
 }
 startBinTimer(); pickDir('up');
-function setTF(el,tf){
-  document.querySelectorAll('.tf-tab').forEach(t=>t.classList.remove('on'));
-  el.classList.add('on');
+function setTF(el) { document.querySelectorAll('.tf-tab').forEach(t => t.classList.remove('on')); el.classList.add('on'); }
+
+/* ═══════════════════════════════════
+   DEPOSIT
+════════════════════════════════════ */
+async function initiateDeposit() {
+  if (!user) return;
+  const phone = document.getElementById('dep-phone').value.trim();
+  const amount = parseFloat(document.getElementById('dep-amount').value) || 0;
+  if (!phone || amount < 10) { toast('Enter valid phone and amount >= KES 10', 'alert'); return; }
+  const btn = document.getElementById('dep-btn');
+  btn.disabled = true; btn.textContent = 'SENDING M-PESA PROMPT...';
+  try {
+    const data = await api('/api/deposit/initiate', { method: 'POST', body: JSON.stringify({ phone, amount }) });
+    if (data.success) { toast('STK Push sent! Check your phone.', 'info'); pollPendingDeposits(); }
+    else toast(data.error || 'Failed to send prompt', 'alert');
+  } catch (e) { toast('Network error. Try again.', 'alert'); }
+  finally { btn.disabled = false; btn.textContent = '📱 SEND M-PESA PROMPT'; }
 }
 
 /* ═══════════════════════════════════
-   PAYHERO DEPOSIT
-═══════════════════════════════════ */
-async function initiateDeposit() {
-  const phone = document.getElementById('dep-phone').value.trim();
-  const amount = parseFloat(document.getElementById('dep-amount').value) || 0;
-  if (!phone || amount < 10) { toast('Please enter valid phone and amount ≥ KES 10', 'alert'); return; }
-  const btn = document.getElementById('dep-btn');
-  btn.disabled = true;
-  btn.textContent = '⏳ SENDING M-PESA PROMPT...';
+   DASHBOARD
+════════════════════════════════════ */
+async function loadDashboard() {
+  if (!user) return;
+  // Stats
+  try { const d = await api('/api/stats'); if (d.success) updateDashboardStats(d.stats); } catch (e) {}
+  // Transactions
   try {
-    const res = await fetch('/api/deposit/initiate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone, amount })
-    });
-    const data = await res.json();
-    if (data.success) {
-      toast(`📱 STK Push sent to ${phone}. Enter your M-Pesa PIN on your phone.`, 'info');
-    } else {
-      toast(data.error || 'Failed to send prompt', 'alert');
-    }
-  } catch (err) {
-    toast('Network error. Please try again.', 'alert');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '📱 SEND M-PESA PROMPT';
-  }
+    const d = await api('/api/transactions?limit=20');
+    if (d.success) renderTransactions(d.transactions);
+  } catch (e) {}
+}
+
+function renderTransactions(txs) {
+  const el = document.getElementById('tx-list');
+  if (!txs || !txs.length) { el.innerHTML = '<div style="padding:20px;text-align:center;font-size:12px;color:var(--txt-3)">No transactions yet</div>'; return; }
+  const icons = { deposit: '💰', aviator_bet: '✈', aviator_win: '✈', aviator_loss: '💸', binary_bet: '📊', binary_win: '📈', binary_loss: '📉', withdrawal: '💸' };
+  const colors = { deposit: '#00e676', aviator_bet: '#2979ff', aviator_win: '#00e676', aviator_loss: '#ff1744', binary_bet: '#2979ff', binary_win: '#00e676', binary_loss: '#ff1744', withdrawal: '#ff6d00' };
+  el.innerHTML = txs.map(t => {
+    const isPending = t.status === 'pending';
+    const amt = t.amount;
+    const icon = icons[t.type] || '📋';
+    const color = colors[t.type] || '#2979ff';
+    const time = new Date(t.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return `<div class="tx-entry">
+      <div class="tx-ico" style="background:${color}22">${icon}</div>
+      <div class="tx-info"><div class="tx-type">${t.description || t.type}</div><div class="tx-time">${time}</div></div>
+      ${isPending ? '<div class="tx-pending">PENDING</div>' : `<div class="tx-amount" style="color:${amt >= 0 ? 'var(--green)' : 'var(--red)'}">${amt >= 0 ? '+' : '-'}${fmt(Math.abs(amt))}</div>`}
+    </div>`;
+  }).join('');
 }
 
 /* ═══════════════════════════════════
    TOAST
-═══════════════════════════════════ */
-function toast(msg,type='info'){
-  const el=document.createElement('div');
-  el.className=`toast ${type}`; el.textContent=msg;
+════════════════════════════════════ */
+function toast(msg, type = 'info') {
+  const el = document.createElement('div'); el.className = `toast ${type}`; el.textContent = msg;
   document.getElementById('toaster').appendChild(el);
-  setTimeout(()=>{ el.style.transition='opacity .35s'; el.style.opacity='0';
-    setTimeout(()=>el.remove(),350); },3200);
+  setTimeout(() => { el.style.transition = 'opacity .35s'; el.style.opacity = '0'; setTimeout(() => el.remove(), 350); }, 3200);
 }
 
 /* ═══════════════════════════════════
    BOOT
-═══════════════════════════════════ */
-recalcPot(1); recalcPot(2); recalcBinProfit();
-setTimeout(avWait, 600);
-updateUI();
+════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  ['bin', 'dash', 'dep'].forEach(v => document.getElementById('view-' + v).style.display = 'none');
+  updateNavVisibility(); showGates();
+  recalcPot(1); recalcPot(2); recalcBinProfit();
+  setTimeout(avWait, 600);
+  initSupabase();
+});
 </script>
 </body>
 </html>
