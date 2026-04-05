@@ -373,23 +373,18 @@ html,body{height:100%;background:var(--base);color:var(--txt-1);font-family:'Exo
 /* ═══════════════════════════════════
    SUPABASE INIT
 ════════════════════════════════════ */
-let sb = null; // supabase client, initialized after config fetch
+let sb = null;
 
 async function initSupabase() {
   try {
-    const res = await fetch('/api/config');
+    const res = await fetch('/api/balance');
     const { supabaseUrl, supabaseAnonKey } = await res.json();
     if (!supabaseUrl || !supabaseAnonKey) throw new Error('Missing config');
     sb = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
-    // Listen for auth state changes
     sb.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session) {
-        onSupabaseLogin(session.user);
-      } else if (event === 'SIGNED_OUT') {
-        onSupabaseLogout();
-      }
+      if (event === 'SIGNED_IN' && session) onSupabaseLogin(session.user);
+      else if (event === 'SIGNED_OUT') onSupabaseLogout();
     });
-    // Check existing session
     const { data: { session } } = await sb.auth.getSession();
     if (session) onSupabaseLogin(session.user);
     else updateNavVisibility();
@@ -477,13 +472,11 @@ document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('cli
 ════════════════════════════════════ */
 let user = null;
 let balance = 0;
-let localTxLog = []; // in-memory for fast UI, synced from API
 
 function fmt(n) { return 'KES ' + Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 
 function updateBalanceDisplay() {
-  const els = [document.getElementById('balNum'), document.getElementById('balNum2')];
-  els.forEach(e => { if (e) e.textContent = fmt(balance); });
+  [document.getElementById('balNum'), document.getElementById('balNum2')].forEach(e => { if (e) e.textContent = fmt(balance); });
 }
 
 function updateDashboardStats(stats) {
@@ -513,158 +506,76 @@ function setAuthMode(mode, el) {
   document.getElementById('auth-error').style.display = 'none';
 }
 
-function toggleAge() {
-  ageOk = !ageOk;
-  document.getElementById('age-toggle').classList.toggle('on', ageOk);
-}
+function toggleAge() { ageOk = !ageOk; document.getElementById('age-toggle').classList.toggle('on', ageOk); }
 
-function showAuthError(msg) {
-  const el = document.getElementById('auth-error');
-  el.textContent = msg;
-  el.style.display = 'block';
-}
+function showAuthError(msg) { const el = document.getElementById('auth-error'); el.textContent = msg; el.style.display = 'block'; }
 
 async function submitAuth() {
   const email = document.getElementById('auth-email').value.trim();
   const phone = document.getElementById('auth-phone').value.trim();
   const pw = document.getElementById('auth-pw').value;
-  const errEl = document.getElementById('auth-error');
-  errEl.style.display = 'none';
-
+  document.getElementById('auth-error').style.display = 'none';
   if (!email) { showAuthError('Email is required'); return; }
   if (!pw || pw.length < 6) { showAuthError('Password must be at least 6 characters'); return; }
   if (authMode === 'register' && !ageOk) { showAuthError('Please confirm you are 18+'); return; }
-  if (authMode === 'register') {
-    const pw2 = document.getElementById('auth-pw2').value;
-    if (pw !== pw2) { showAuthError('Passwords do not match'); return; }
-  }
+  if (authMode === 'register' && pw !== document.getElementById('auth-pw2').value) { showAuthError('Passwords do not match'); return; }
 
   const btn = document.getElementById('auth-submit-btn');
-  btn.disabled = true;
-  btn.textContent = 'PLEASE WAIT...';
-
+  btn.disabled = true; btn.textContent = 'PLEASE WAIT...';
   try {
-    let result;
     const meta = { phone };
-    if (authMode === 'register') {
-      result = await sb.auth.signUp({ email, password: pw, options: { data: meta } });
-    } else {
-      result = await sb.auth.signInWithPassword({ email, password: pw });
-    }
-
+    const result = authMode === 'register'
+      ? await sb.auth.signUp({ email, password: pw, options: { data: meta } })
+      : await sb.auth.signInWithPassword({ email, password: pw });
     if (result.error) throw result.error;
     closeModal('auth-modal');
-    // onSupabaseLogin is called by the auth state listener
-  } catch (err) {
-    showAuthError(err.message || 'Authentication failed');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = authMode === 'login' ? 'ENTER PLATFORM' : 'CREATE ACCOUNT';
-  }
+  } catch (err) { showAuthError(err.message || 'Authentication failed'); }
+  finally { btn.disabled = false; btn.textContent = authMode === 'login' ? 'ENTER PLATFORM' : 'CREATE ACCOUNT'; }
 }
 
 async function onSupabaseLogin(supabaseUser) {
-  user = {
-    id: supabaseUser.id,
-    name: supabaseUser.user_metadata?.display_name || supabaseUser.email?.split('@')[0] || 'Player',
-    email: supabaseUser.email,
-    phone: supabaseUser.user_metadata?.phone || ''
-  };
+  user = { id: supabaseUser.id, name: supabaseUser.user_metadata?.display_name || supabaseUser.email?.split('@')[0] || 'Player', email: supabaseUser.email, phone: supabaseUser.user_metadata?.phone || '' };
+  try { const data = await api('/api/balance'); if (data.success) balance = data.balance; } catch (e) {}
 
-  // Fetch real balance
-  try {
-    const data = await api('/api/balance');
-    if (data.success) balance = data.balance;
-  } catch (e) { console.error('Balance fetch failed:', e); }
-
-  // Update UI
   document.getElementById('balWrap').style.display = 'flex';
-  document.getElementById('authBtns').innerHTML = `
-    <div class="user-pill" onclick="showView('dash')">
-      <div class="user-av">${user.name.charAt(0).toUpperCase()}</div>
-      <div><div class="user-nm">${user.name.toUpperCase()}</div><div class="user-bal-sm" id="balNum2">${fmt(balance)}</div></div>
-    </div>
-    <button class="logout-btn" onclick="doLogout()" title="Log out">⏻</button>`;
-
-  hideGates();
-  updateNavVisibility();
-  updateBalanceDisplay();
-
+  document.getElementById('authBtns').innerHTML = `<div class="user-pill" onclick="showView('dash')"><div class="user-av">${user.name.charAt(0).toUpperCase()}</div><div><div class="user-nm">${user.name.toUpperCase()}</div><div class="user-bal-sm" id="balNum2">${fmt(balance)}</div></div></div><button class="logout-btn" onclick="doLogout()" title="Log out">\u23FB</button>`;
+  hideGates(); updateNavVisibility(); updateBalanceDisplay();
   toast('Welcome to KANDEGE!', 'win');
-
-  // Start balance polling every 15s
   startBalancePoll();
 }
 
-async function doLogout() {
-  try { await sb.auth.signOut(); } catch (e) {}
-  onSupabaseLogout();
-}
+async function doLogout() { try { await sb.auth.signOut(); } catch (e) {} onSupabaseLogout(); }
 
 function onSupabaseLogout() {
-  user = null;
-  balance = 0;
-  localTxLog = [];
-  stopBalancePoll();
-
-  document.getElementById('authBtns').innerHTML = `
-    <div style="display:flex;gap:6px">
-      <button class="auth-btn btn-login" onclick="openModal('auth-modal','login')">LOG IN</button>
-      <button class="auth-btn btn-register" onclick="openModal('auth-modal','register')">REGISTER</button>
-    </div>`;
+  user = null; balance = 0; stopBalancePoll();
+  document.getElementById('authBtns').innerHTML = '<div style="display:flex;gap:6px"><button class="auth-btn btn-login" onclick="openModal(\'auth-modal\',\'login\')">LOG IN</button><button class="auth-btn btn-register" onclick="openModal(\'auth-modal\',\'register\')">REGISTER</button></div>';
   document.getElementById('balWrap').style.display = 'none';
-
-  showGates();
-  updateNavVisibility();
-  updateBalanceDisplay();
-  showView('av');
-  toast('You have been logged out.', 'info');
+  showGates(); updateNavVisibility(); updateBalanceDisplay(); showView('av');
+  toast('Logged out.', 'info');
 }
 
-function handleAcctClick() {
-  if (!user) openModal('auth-modal');
-  else showView('dash');
-}
+function handleAcctClick() { if (!user) openModal('auth-modal'); else showView('dash'); }
 
-/* Balance polling */
 let balancePollIv = null;
-function startBalancePoll() {
-  stopBalancePoll();
-  balancePollIv = setInterval(async () => {
-    if (!user) return;
-    try {
-      const data = await api('/api/balance');
-      if (data.success && data.balance !== balance) {
-        balance = data.balance;
-        updateBalanceDisplay();
-      }
-    } catch (e) {}
-  }, 15000);
-}
+function startBalancePoll() { stopBalancePoll(); balancePollIv = setInterval(async () => { if (!user) return; try { const d = await api('/api/balance'); if (d.success && d.balance !== balance) { balance = d.balance; updateBalanceDisplay(); } } catch (e) {} }, 15000); }
 function stopBalancePoll() { if (balancePollIv) { clearInterval(balancePollIv); balancePollIv = null; } }
 
-/* Pending deposit polling */
 let depositPollIv = null;
 function pollPendingDeposits() {
   if (depositPollIv) clearInterval(depositPollIv);
   depositPollIv = setInterval(async () => {
     if (!user || currentView !== 'dep') { clearInterval(depositPollIv); return; }
     try {
-      const data = await api('/api/transactions?limit=3');
-      if (data.success && data.pendingDeposits === 0 && depositPollIv) {
+      const d = await api('/api/user?action=transactions&limit=3');
+      if (d.success && d.pendingDeposits === 0 && depositPollIv) {
         clearInterval(depositPollIv);
-        const data2 = await api('/api/balance');
-        if (data2.success) {
-          balance = data2.balance;
-          updateBalanceDisplay();
-          toast('Deposit credited!', 'win');
-        }
+        const d2 = await api('/api/balance');
+        if (d2.success) { balance = d2.balance; updateBalanceDisplay(); toast('Deposit credited!', 'win'); }
       }
     } catch (e) {}
   }, 5000);
 }
 
-/* Gates */
 function showGates() { ['gate1', 'gate2', 'gate-bin'].forEach(id => { const e = document.getElementById(id); if (e) e.style.display = 'flex'; }); }
 function hideGates() { ['gate1', 'gate2', 'gate-bin'].forEach(id => { const e = document.getElementById(id); if (e) e.style.display = 'none'; }); }
 function checkLogin() { if (!user) { showGates(); return false; } return true; }
@@ -673,25 +584,9 @@ function checkLogin() { if (!user) { showGates(); return false; } return true; }
    PROVABLY FAIR
 ════════════════════════════════════ */
 let pfServer = '', pfClient = '', pfNonce = 0, pfHash = '';
-async function sha256(str) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-}
-async function genSeeds() {
-  pfServer = crypto.randomUUID().replace(/-/g, '');
-  pfClient = crypto.randomUUID().replace(/-/g, '').slice(0, 16);
-  pfNonce++;
-  pfHash = await sha256(pfServer);
-  updatePFDisplay();
-}
-function updatePFDisplay() {
-  const s = h => h.slice(0, 10) + '...' + h.slice(-6);
-  document.getElementById('pf-hash-short').textContent = s(pfHash);
-  document.getElementById('pf-client-short').textContent = pfClient;
-  document.getElementById('pf-nonce').textContent = '#' + pfNonce;
-  document.getElementById('pf-modal-hash').textContent = pfHash;
-  document.getElementById('pf-modal-client').textContent = pfClient;
-}
+async function sha256(str) { const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)); return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join(''); }
+async function genSeeds() { pfServer = crypto.randomUUID().replace(/-/g, ''); pfClient = crypto.randomUUID().replace(/-/g, '').slice(0, 16); pfNonce++; pfHash = await sha256(pfServer); updatePFDisplay(); }
+function updatePFDisplay() { const s = h => h.slice(0, 10) + '...' + h.slice(-6); document.getElementById('pf-hash-short').textContent = s(pfHash); document.getElementById('pf-client-short').textContent = pfClient; document.getElementById('pf-nonce').textContent = '#' + pfNonce; document.getElementById('pf-modal-hash').textContent = pfHash; document.getElementById('pf-modal-client').textContent = pfClient; }
 function copyEl(el) { navigator.clipboard.writeText(el.textContent).catch(() => {}); toast('Copied!', 'info'); }
 
 /* ═══════════════════════════════════
@@ -705,18 +600,13 @@ function calcCrash() { const r = Math.random(); if (r < 0.06) return 1.00; retur
 let avState = 'waiting', avMult = 1.0, avCrashAt = 0, avPoints = [], avAnimId = null, avRound = 0, avHistory = [];
 let bets = [{ active: false, amount: 0, cashed: false, betId: null }, { active: false, amount: 0, cashed: false, betId: null }];
 let fakePlayers = [];
-
 const multNumEl = () => document.getElementById('mult-num');
 const multSubEl = () => document.getElementById('mult-sub');
 const cLineEl = () => document.getElementById('c-line');
 const cAreaEl = () => document.getElementById('c-area');
 const planeEl = () => document.getElementById('av-plane');
 
-function recalcPot(slot) {
-  const amt = parseFloat(document.getElementById(`av-amt${slot}`).value) || 0;
-  const co = parseFloat(document.getElementById(`av-co${slot}`).value) || 2;
-  document.getElementById(`av-pot${slot}`).textContent = fmt(amt * co);
-}
+function recalcPot(slot) { const a = parseFloat(document.getElementById(`av-amt${slot}`).value) || 0; const c = parseFloat(document.getElementById(`av-co${slot}`).value) || 2; document.getElementById(`av-pot${slot}`).textContent = fmt(a * c); }
 function setv(id, v, slot) { document.getElementById(id).value = v; recalcPot(slot); }
 
 async function placeBet(slot) {
@@ -726,27 +616,19 @@ async function placeBet(slot) {
   if (amt > balance) { toast('Insufficient balance', 'alert'); return; }
   if (bets[slot - 1].active) { toast('Bet already placed', 'alert'); return; }
   if (avState !== 'waiting' && avState !== 'flying') return;
-
-  // Call API
   const btn = document.getElementById(`av-bet${slot}-btn`);
   btn.disabled = true; btn.textContent = 'BETTING...';
   try {
-    const data = await api('/api/game/bet', {
+    const data = await api('/api/game?action=bet', {
       method: 'POST',
-      body: JSON.stringify({
-        amount: amt, panel: slot, roundNumber: avRound,
-        autoCashout: parseFloat(document.getElementById(`av-co${slot}`).value) || null,
-        serverSeedHash: pfHash, clientSeed: pfClient, nonce: pfNonce
-      })
+      body: JSON.stringify({ amount: amt, panel: slot, roundNumber: avRound, autoCashout: parseFloat(document.getElementById(`av-co${slot}`).value) || null, serverSeedHash: pfHash, clientSeed: pfClient, nonce: pfNonce })
     });
     if (!data.success) { toast(data.error || 'Bet failed', 'alert'); return; }
     bets[slot - 1] = { active: true, amount: amt, cashed: false, betId: data.betId };
-    balance = data.balance;
-    updateBalanceDisplay();
+    balance = data.balance; updateBalanceDisplay();
     document.getElementById(`av-bet${slot}-btn`).style.display = 'none';
     document.getElementById(`av-cash${slot}-btn`).style.display = 'block';
-    toast(`Bet ${slot} placed: ${fmt(amt)}`, 'info');
-    renderBetsList();
+    toast(`Bet ${slot} placed: ${fmt(amt)}`, 'info'); renderBetsList();
   } catch (e) { toast('Network error', 'alert'); }
   finally { btn.disabled = false; btn.textContent = 'PLACE BET'; }
 }
@@ -757,25 +639,22 @@ async function cashOut(slot) {
   const btn = document.getElementById(`av-cash${slot}-btn`);
   btn.disabled = true; btn.textContent = 'CASHING OUT...';
   try {
-    const data = await api('/api/game/cashout', {
+    const data = await api('/api/game?action=cashout', {
       method: 'POST',
       body: JSON.stringify({ betId: bet.betId, multiplier: avMult, crashPoint: avCrashAt })
     });
     if (!data.success) { toast(data.error || 'Cashout failed', 'alert'); return; }
-    bet.cashed = true;
-    balance = data.balance;
-    updateBalanceDisplay();
+    bet.cashed = true; balance = data.balance; updateBalanceDisplay();
     toast(`Cashed out x${avMult.toFixed(2)}! Won ${fmt(data.winnings)}`, 'win');
     document.getElementById(`av-cash${slot}-btn`).style.display = 'none';
-    document.getElementById(`av-bet${slot}-btn`).style.display = 'block';
-    renderBetsList();
+    document.getElementById(`av-bet${slot}-btn`).style.display = 'block'; renderBetsList();
   } catch (e) { toast('Network error', 'alert'); }
   finally { btn.disabled = false; btn.textContent = 'CASH OUT'; }
 }
 
 async function recordLoss(bet) {
   if (!bet.betId) return;
-  try { await api('/api/game/loss', { method: 'POST', body: JSON.stringify({ betId: bet.betId, crashPoint: avCrashAt }) }); } catch (e) {}
+  try { await api('/api/game?action=loss', { method: 'POST', body: JSON.stringify({ betId: bet.betId, crashPoint: avCrashAt }) }); } catch (e) {}
 }
 
 function avWait() {
@@ -784,8 +663,6 @@ function avWait() {
   cLineEl().setAttribute('stroke', 'var(--accent)'); cAreaEl().setAttribute('fill', 'url(#curveGrad)');
   planeEl().style.display = 'none';
   multNumEl().className = 'mult-big state-wait'; multNumEl().textContent = 'WAITING';
-
-  // Resolve active bets as losses
   bets.forEach((b, i) => {
     if (b.active && !b.cashed) recordLoss(b);
     bets[i] = { active: false, amount: 0, cashed: false, betId: null };
@@ -795,9 +672,7 @@ function avWait() {
     document.getElementById(`av-cash${i + 1}-btn`).style.display = 'none';
   });
   renderBetsList();
-
-  let cd = 5;
-  multSubEl().textContent = `NEXT ROUND IN ${cd}s`;
+  let cd = 5; multSubEl().textContent = `NEXT ROUND IN ${cd}s`;
   const iv = setInterval(() => { cd--; if (cd <= 0) { clearInterval(iv); avFly(); } else multSubEl().textContent = `NEXT ROUND IN ${cd}s`; }, 1000);
 }
 
@@ -806,12 +681,10 @@ async function avFly() {
   avState = 'flying'; avMult = 1.0; avCrashAt = calcCrash(); avPoints = []; avRound++;
   document.getElementById('round-id-lbl').textContent = `Round #${avRound}`;
   multNumEl().className = 'mult-big state-fly'; multSubEl().textContent = '';
-  planeEl().style.display = 'block';
-  spawnFakePlayers();
+  planeEl().style.display = 'block'; spawnFakePlayers();
   const autoCo1 = parseFloat(document.getElementById('av-co1').value) || 0;
   const autoCo2 = parseFloat(document.getElementById('av-co2').value) || 0;
   const SW = 700, SH = 340;
-
   function tick() {
     if (avState !== 'flying') return;
     avMult = +(avMult + 0.015 + Math.log(avMult + 1) * 0.007).toFixed(3);
@@ -850,17 +723,11 @@ function avCrashRound() {
   multNumEl().className = 'mult-big state-crash'; multNumEl().textContent = avMult.toFixed(2) + 'x';
   multSubEl().textContent = 'FLEW AWAY!'; planeEl().style.display = 'none';
   avHistory.unshift(+avMult.toFixed(2)); if (avHistory.length > 14) avHistory.pop();
-  renderHistory();
-  addChatMsg('System', `Round ended at ${avMult.toFixed(2)}x`, false, false);
+  renderHistory(); addChatMsg('System', `Round ended at ${avMult.toFixed(2)}x`, false, false);
   setTimeout(avWait, 4000);
 }
 
-function renderHistory() {
-  document.getElementById('hist-pills').innerHTML = avHistory.map(m => {
-    const c = m < 1.5 ? 'lo' : m < 3 ? 'md' : m < 10 ? 'hi' : 'xl';
-    return `<div class="hpill ${c}">${m.toFixed(2)}x</div>`;
-  }).join('');
-}
+function renderHistory() { document.getElementById('hist-pills').innerHTML = avHistory.map(m => { const c = m < 1.5 ? 'lo' : m < 3 ? 'md' : m < 10 ? 'hi' : 'xl'; return `<div class="hpill ${c}">${m.toFixed(2)}x</div>`; }).join(''); }
 
 function renderBetsList() {
   const el = document.getElementById('bets-list');
@@ -871,16 +738,11 @@ function renderBetsList() {
 
 function renderTicker() {
   const el = document.getElementById('arena-ticker');
-  el.innerHTML = `<div class="ticker-item"><span style="font-size:9px;color:var(--txt-3);letter-spacing:1px;font-weight:700">LIVE:</span></div>` + fakePlayers.slice(0, 4).map(fp => `<div class="ticker-item"><span class="ticker-name">${fp.name}</span><span class="ticker-mult">x${avMult.toFixed(2)}</span><span class="ticker-amt">${fmt(fp.bet * avMult)}</span></div>`).join('<span style="color:var(--border);padding:0 6px">·</span>');
+  el.innerHTML = '<div class="ticker-item"><span style="font-size:9px;color:var(--txt-3);letter-spacing:1px;font-weight:700">LIVE:</span></div>' + fakePlayers.slice(0, 4).map(fp => `<div class="ticker-item"><span class="ticker-name">${fp.name}</span><span class="ticker-mult">x${avMult.toFixed(2)}</span><span class="ticker-amt">${fmt(fp.bet * avMult)}</span></div>`).join('<span style="color:var(--border);padding:0 6px">·</span>');
 }
 
 const FN = ['P***r', 'M***a', 'J***n', 'W***i', 'A***e', 'D***o', 'K***h', 'L***a'];
-function spawnFakePlayers() {
-  fakePlayers = [];
-  for (let i = 0; i < 6 + Math.floor(Math.random() * 6); i++) {
-    fakePlayers.push({ name: FN[Math.floor(Math.random() * FN.length)], bet: [50, 100, 200, 300, 500, 1000][Math.floor(Math.random() * 6)], cashoutAt: +(1.2 + Math.random() * 4).toFixed(2), cashedOut: false });
-  }
-}
+function spawnFakePlayers() { fakePlayers = []; for (let i = 0; i < 6 + Math.floor(Math.random() * 6); i++) fakePlayers.push({ name: FN[Math.floor(Math.random() * FN.length)], bet: [50, 100, 200, 300, 500, 1000][Math.floor(Math.random() * 6)], cashoutAt: +(1.2 + Math.random() * 4).toFixed(2), cashedOut: false }); }
 
 /* ═══════════════════════════════════
    CHAT
@@ -889,23 +751,16 @@ const chatN = ['Pendo', 'Moses', 'Aisha', 'Kamau', 'Njoki', 'Brian', 'Faith'];
 const chatC = ['#ff6d00', '#2979ff', '#00e676', '#e040fb', '#ffcc00'];
 function addChatMsg(name, text, isWin = false, isBig = false) {
   const el = document.getElementById('chat-msgs');
-  const t = new Date();
-  const c = chatC[name.charCodeAt(0) % chatC.length];
+  const t = new Date(); const c = chatC[name.charCodeAt(0) % chatC.length];
   const d = document.createElement('div');
   d.className = 'chat-msg' + (isBig ? ' is-big' : isWin ? ' is-win' : '');
   d.innerHTML = `<div class="cm-header"><div class="cm-av" style="background:${c}">${name.charAt(0)}</div><div class="cm-name">${name}</div><div class="cm-time">${t.getHours()}:${String(t.getMinutes()).padStart(2, '0')}</div></div><div class="cm-text">${text}</div>`;
   el.appendChild(d); el.scrollTop = el.scrollHeight;
   while (el.children.length > 40) el.removeChild(el.firstChild);
 }
-function sendChat() {
-  if (!user) { toast('Sign in to chat', 'alert'); openModal('auth-modal'); return; }
-  const inp = document.getElementById('chat-inp');
-  const msg = inp.value.trim();
-  if (!msg) return;
-  addChatMsg(user.name, msg); inp.value = '';
-}
+function sendChat() { if (!user) { toast('Sign in to chat', 'alert'); openModal('auth-modal'); return; } const inp = document.getElementById('chat-inp'); const msg = inp.value.trim(); if (!msg) return; addChatMsg(user.name, msg); inp.value = ''; }
 document.getElementById('chat-inp').addEventListener('keydown', e => { if (e.key === 'Enter') sendChat(); });
-const chatMsgs = [m => `Flying at ${m}x!`, m => `Cashed at ${(m - 0.2).toFixed(2)}x`, m => `Just doubled!`, m => `Holding...`, m => `${m}x LETS GO`];
+const chatMsgs = [m => `Flying at ${m}x!`, m => `Cashed at ${(m - 0.2).toFixed(2)}x`, m => `Just doubled!`, m => `${m}x LETS GO`];
 setInterval(() => { if (avState === 'flying' && Math.random() < 0.4) addChatMsg(chatN[Math.floor(Math.random() * chatN.length)], chatMsgs[Math.floor(Math.random() * chatMsgs.length)](avMult.toFixed(2))); }, 3500);
 setTimeout(() => { addChatMsg('Pendo', 'Wagwan everyone'); addChatMsg('Moses', 'Good luck!'); }, 500);
 
@@ -958,13 +813,8 @@ setTimeout(() => { resizeCandle(); window.addEventListener('resize', resizeCandl
 let binDir = 'up', binTimer = 60, binTimerIv = null, binTradeActive = false, binTradeAmt = 0, binTradePrice = 0, binTradeId = null;
 
 function pickDir(d) {
-  binDir = d;
-  document.getElementById('dc-up').classList.toggle('sel', d === 'up');
-  document.getElementById('dc-dn').classList.toggle('sel', d === 'dn');
-  const btn = document.getElementById('bin-exec-btn');
-  btn.textContent = d === 'up' ? '▲ EXECUTE CALL' : '▼ EXECUTE PUT';
-  btn.className = 'action-btn ' + (d === 'up' ? 'btn-up' : 'btn-dn');
-  recalcBinProfit();
+  binDir = d; document.getElementById('dc-up').classList.toggle('sel', d === 'up'); document.getElementById('dc-dn').classList.toggle('sel', d === 'dn');
+  const btn = document.getElementById('bin-exec-btn'); btn.textContent = d === 'up' ? '▲ EXECUTE CALL' : '▼ EXECUTE PUT'; btn.className = 'action-btn ' + (d === 'up' ? 'btn-up' : 'btn-dn'); recalcBinProfit();
 }
 function setbinamt(v) { document.getElementById('bin-amt').value = v; recalcBinProfit(); }
 function recalcBinProfit() { const a = parseFloat(document.getElementById('bin-amt').value) || 0; document.getElementById('bin-profit').textContent = '+' + fmt(a * (binDir === 'up' ? 0.92 : 0.85)); }
@@ -975,17 +825,15 @@ async function execBinary() {
   if (amt < 50) { toast('Minimum trade: KES 50', 'alert'); return; }
   if (amt > balance) { toast('Insufficient balance', 'alert'); return; }
   if (binTradeActive) { toast('Trade already active', 'alert'); return; }
-  const btn = document.getElementById('bin-exec-btn');
-  btn.disabled = true; btn.textContent = 'EXECUTING...';
+  const btn = document.getElementById('bin-exec-btn'); btn.disabled = true; btn.textContent = 'EXECUTING...';
   try {
-    const data = await api('/api/game/binary?action=execute', {
+    const data = await api('/api/game?action=binary', {
       method: 'POST',
-      body: JSON.stringify({ amount: amt, direction: binDir, entryPrice: btcPrice })
+      body: JSON.stringify({ action: 'execute', amount: amt, direction: binDir, entryPrice: btcPrice })
     });
     if (!data.success) { toast(data.error || 'Trade failed', 'alert'); return; }
     binTradeActive = true; binTradeAmt = amt; binTradePrice = btcPrice; binTradeId = data.tradeId;
-    balance = data.balance; updateBalanceDisplay();
-    toast(`${binDir.toUpperCase()} trade: ${fmt(amt)}`, 'info');
+    balance = data.balance; updateBalanceDisplay(); toast(`${binDir.toUpperCase()} trade: ${fmt(amt)}`, 'info');
   } catch (e) { toast('Network error', 'alert'); }
   finally { btn.disabled = false; btn.textContent = binDir === 'up' ? '▲ EXECUTE CALL' : '▼ EXECUTE PUT'; }
 }
@@ -994,28 +842,24 @@ async function resolveBinary() {
   if (binTradeActive && binTradeId) {
     const won = (binDir === 'up' && btcPrice > binTradePrice) || (binDir === 'dn' && btcPrice < binTradePrice);
     try {
-      const data = await api('/api/game/binary?action=resolve', {
+      const data = await api('/api/game?action=binary', {
         method: 'POST',
-        body: JSON.stringify({ tradeId: binTradeId, exitPrice: btcPrice, won })
+        body: JSON.stringify({ action: 'resolve', tradeId: binTradeId, exitPrice: btcPrice, won })
       });
       if (data.success) {
-        if (data.won) { balance = data.balance; toast(`Binary WIN! +${fmt(data.profit)}`, 'win'); }
+        if (data.won) { balance = data.balance; updateBalanceDisplay(); toast(`Binary WIN! +${fmt(data.profit)}`, 'win'); }
         else { toast('Binary LOSS', 'loss'); }
-        updateBalanceDisplay();
       }
     } catch (e) {}
   }
-  binTradeActive = false; binTradeId = null;
-  startBinTimer();
+  binTradeActive = false; binTradeId = null; startBinTimer();
 }
 
 function startBinTimer() {
   binTimer = 60; clearInterval(binTimerIv);
   binTimerIv = setInterval(() => {
-    binTimer--;
-    document.getElementById('bin-timer-num').textContent = binTimer;
-    const ring = document.getElementById('timer-ring');
-    ring.setAttribute('stroke-dashoffset', 239 * (1 - binTimer / 60));
+    binTimer--; document.getElementById('bin-timer-num').textContent = binTimer;
+    const ring = document.getElementById('timer-ring'); ring.setAttribute('stroke-dashoffset', 239 * (1 - binTimer / 60));
     ring.setAttribute('stroke', binTimer <= 10 ? 'var(--red)' : binTimer <= 20 ? 'var(--orange)' : 'var(--accent)');
     if (binTimer <= 0) { clearInterval(binTimerIv); resolveBinary(); }
   }, 1000);
@@ -1031,14 +875,13 @@ async function initiateDeposit() {
   const phone = document.getElementById('dep-phone').value.trim();
   const amount = parseFloat(document.getElementById('dep-amount').value) || 0;
   if (!phone || amount < 10) { toast('Enter valid phone and amount >= KES 10', 'alert'); return; }
-  const btn = document.getElementById('dep-btn');
-  btn.disabled = true; btn.textContent = 'SENDING M-PESA PROMPT...';
+  const btn = document.getElementById('dep-btn'); btn.disabled = true; btn.textContent = 'SENDING M-PESA PROMPT...';
   try {
     const data = await api('/api/deposit/initiate', { method: 'POST', body: JSON.stringify({ phone, amount }) });
     if (data.success) { toast('STK Push sent! Check your phone.', 'info'); pollPendingDeposits(); }
     else toast(data.error || 'Failed to send prompt', 'alert');
   } catch (e) { toast('Network error. Try again.', 'alert'); }
-  finally { btn.disabled = false; btn.textContent = '📱 SEND M-PESA PROMPT'; }
+  finally { btn.disabled = false; btn.textContent = '\uD83D\uDCF1 SEND M-PESA PROMPT'; }
 }
 
 /* ═══════════════════════════════════
@@ -1046,31 +889,20 @@ async function initiateDeposit() {
 ════════════════════════════════════ */
 async function loadDashboard() {
   if (!user) return;
-  // Stats
-  try { const d = await api('/api/stats'); if (d.success) updateDashboardStats(d.stats); } catch (e) {}
-  // Transactions
-  try {
-    const d = await api('/api/transactions?limit=20');
-    if (d.success) renderTransactions(d.transactions);
-  } catch (e) {}
+  try { const d = await api('/api/user?action=stats'); if (d.success) updateDashboardStats(d.stats); } catch (e) {}
+  try { const d = await api('/api/user?action=transactions&limit=20'); if (d.success) renderTransactions(d.transactions); } catch (e) {}
 }
 
 function renderTransactions(txs) {
   const el = document.getElementById('tx-list');
   if (!txs || !txs.length) { el.innerHTML = '<div style="padding:20px;text-align:center;font-size:12px;color:var(--txt-3)">No transactions yet</div>'; return; }
-  const icons = { deposit: '💰', aviator_bet: '✈', aviator_win: '✈', aviator_loss: '💸', binary_bet: '📊', binary_win: '📈', binary_loss: '📉', withdrawal: '💸' };
+  const icons = { deposit: '\uD83D\uDCB0', aviator_bet: '\u2708', aviator_win: '\u2708', aviator_loss: '\uD83D\uDCB8', binary_bet: '\uD83D\uDCCA', binary_win: '\uD83D\uDCC8', binary_loss: '\uD83D\uDCC9', withdrawal: '\uD83D\uDCB8' };
   const colors = { deposit: '#00e676', aviator_bet: '#2979ff', aviator_win: '#00e676', aviator_loss: '#ff1744', binary_bet: '#2979ff', binary_win: '#00e676', binary_loss: '#ff1744', withdrawal: '#ff6d00' };
   el.innerHTML = txs.map(t => {
     const isPending = t.status === 'pending';
-    const amt = t.amount;
-    const icon = icons[t.type] || '📋';
-    const color = colors[t.type] || '#2979ff';
+    const icon = icons[t.type] || '\uD83D\uDCCB'; const color = colors[t.type] || '#2979ff';
     const time = new Date(t.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    return `<div class="tx-entry">
-      <div class="tx-ico" style="background:${color}22">${icon}</div>
-      <div class="tx-info"><div class="tx-type">${t.description || t.type}</div><div class="tx-time">${time}</div></div>
-      ${isPending ? '<div class="tx-pending">PENDING</div>' : `<div class="tx-amount" style="color:${amt >= 0 ? 'var(--green)' : 'var(--red)'}">${amt >= 0 ? '+' : '-'}${fmt(Math.abs(amt))}</div>`}
-    </div>`;
+    return `<div class="tx-entry"><div class="tx-ico" style="background:${color}22">${icon}</div><div class="tx-info"><div class="tx-type">${t.description || t.type}</div><div class="tx-time">${time}</div></div>${isPending ? '<div class="tx-pending">PENDING</div>' : `<div class="tx-amount" style="color:${t.amount >= 0 ? 'var(--green)' : 'var(--red)'}">${t.amount >= 0 ? '+' : '-'}${fmt(Math.abs(t.amount))}</div>`}</div>`;
   }).join('');
 }
 
@@ -1088,8 +920,7 @@ function toast(msg, type = 'info') {
 ════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
   ['bin', 'dash', 'dep'].forEach(v => document.getElementById('view-' + v).style.display = 'none');
-  updateNavVisibility(); showGates();
-  recalcPot(1); recalcPot(2); recalcBinProfit();
+  updateNavVisibility(); showGates(); recalcPot(1); recalcPot(2); recalcBinProfit();
   setTimeout(avWait, 600);
   initSupabase();
 });
