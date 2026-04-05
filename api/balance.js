@@ -1,6 +1,3 @@
-// api/balance.js
-// GET /api/balance — Returns real user balance from Supabase
-
 require('dotenv').config();
 const supabase = require('./lib/supabase');
 const verifyToken = require('./lib/verify-token');
@@ -13,40 +10,49 @@ module.exports = async (req, res) => {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const user = await verifyToken(req);
-    if (!user) return res.status(401).json({ success: false, error: 'Not authenticated' });
+    let user = null;
+    if (verifyToken) {
+      user = await verifyToken(req);
+    }
 
-    // Ensure profile exists (safety net)
-    const { data: profile, error } = await supabase
-      .from('profiles')
-      .select('balance, total_deposits, display_name, phone')
-      .eq('id', user.id)
-      .single();
+    if (user) {
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('balance, total_deposits, display_name, phone')
+        .eq('id', user.id)
+        .single();
 
-    if (error && error.code === 'PGRST116') {
-      // Profile doesn't exist — create it
-      await supabase.from('profiles').insert({
-        id: user.id,
-        display_name: user.email?.split('@')[0] || 'Player',
-        phone: user.raw_user_meta_data?.phone || ''
-      });
+      if (error && error.code === 'PGRST116') {
+        await supabase.from('profiles').insert({
+          id: user.id,
+          display_name: user.email?.split('@')[0] || 'Player',
+          phone: user.raw_user_meta_data?.phone || ''
+        });
+        return res.status(200).json({
+          success: true, balance: 0, formatted: 'KES 0.00', userId: user.id,
+          supabaseUrl: process.env.SUPABASE_URL || '',
+          supabaseAnonKey: process.env.SUPABASE_ANON_KEY || ''
+        });
+      }
+      if (error) throw error;
+
       return res.status(200).json({
         success: true,
-        balance: 0,
-        formatted: 'KES 0.00',
-        userId: user.id
+        balance: Number(profile.balance),
+        formatted: `KES ${Number(profile.balance).toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
+        userId: user.id,
+        displayName: profile.display_name,
+        phone: profile.phone,
+        supabaseUrl: process.env.SUPABASE_URL || '',
+        supabaseAnonKey: process.env.SUPABASE_ANON_KEY || ''
       });
     }
 
-    if (error) throw error;
-
-    res.status(200).json({
-      success: true,
-      balance: Number(profile.balance),
-      formatted: `KES ${Number(profile.balance).toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
-      userId: user.id,
-      displayName: profile.display_name,
-      phone: profile.phone
+    // Not logged in — still return config for frontend init
+    return res.status(200).json({
+      success: true, balance: 0, formatted: 'KES 0.00', userId: null,
+      supabaseUrl: process.env.SUPABASE_URL || '',
+      supabaseAnonKey: process.env.SUPABASE_ANON_KEY || ''
     });
 
   } catch (error) {
