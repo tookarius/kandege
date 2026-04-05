@@ -1,51 +1,56 @@
 // api/balance.js
-// GET /api/balance - Returns current user balance (for production-ready frontend)
+// GET /api/balance — Returns real user balance from Supabase
 
 require('dotenv').config();
+const supabase = require('./lib/supabase');
+const verifyToken = require('./lib/verify-token');
 
 module.exports = async (req, res) => {
-  // Allow CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    // TODO: In real production, you should verify the user with JWT or session
-    // For now, we'll return a demo balance. Replace this with real database logic later.
+    const user = await verifyToken(req);
+    if (!user) return res.status(401).json({ success: false, error: 'Not authenticated' });
 
-    // Example: Extract user from query or Authorization header
-    const userId = req.query.userId || "demo-user";
+    // Ensure profile exists (safety net)
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('balance, total_deposits, display_name, phone')
+      .eq('id', user.id)
+      .single();
 
-    // === DEMO MODE (for initial testing) ===
-    // You can hardcode or use a simple in-memory store for now
-    const demoBalance = 12450.75;   // Change this as you test
+    if (error && error.code === 'PGRST116') {
+      // Profile doesn't exist — create it
+      await supabase.from('profiles').insert({
+        id: user.id,
+        display_name: user.email?.split('@')[0] || 'Player',
+        phone: user.raw_user_meta_data?.phone || ''
+      });
+      return res.status(200).json({
+        success: true,
+        balance: 0,
+        formatted: 'KES 0.00',
+        userId: user.id
+      });
+    }
 
-    // === FUTURE REAL IMPLEMENTATION ===
-    // const User = require('../models/User'); // if using MongoDB
-    // const user = await User.findById(userId);
-    // const balance = user ? user.balance : 0;
+    if (error) throw error;
 
     res.status(200).json({
       success: true,
-      balance: demoBalance,
-      formatted: `KES ${demoBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
-      userId: userId,
-      timestamp: new Date().toISOString()
+      balance: Number(profile.balance),
+      formatted: `KES ${Number(profile.balance).toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
+      userId: user.id,
+      displayName: profile.display_name,
+      phone: profile.phone
     });
 
   } catch (error) {
     console.error('Balance error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Failed to fetch balance'
-    });
+    res.status(500).json({ success: false, error: 'Failed to fetch balance' });
   }
 };
